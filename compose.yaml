@@ -1,12 +1,8 @@
-# Comments are provided throughout this file to help you get started.
-# If you need more help, visit the Docker Compose reference guide at
-# https://docs.docker.com/go/compose-spec-reference/
+version: '3.8'
 
-# Here the instructions define your application as a service called "app".
-# This service is built from the Dockerfile in the current directory.
-# You can add other services your application may depend on here, such as a
-# database or a cache. For examples, see the Awesome Compose repository:
-# https://github.com/docker/awesome-compose
+networks:
+  app-network:
+    driver: bridge
 
 services: 
   app:
@@ -18,7 +14,8 @@ services:
     volumes:
       - .:/app
     ports:
-      - 3001:3000
+      - "3001:3000"
+      - "5555:5555"
     environment:
       - NODE_ENV=${NODE_ENV}
       - DATABASE_URL=${DATABASE_URL}
@@ -41,6 +38,6 @@ services:
       - postgres-data:/var/lib/postgresql/data
     networks:
       - app-network
- 
-  volumes:
-    postgres-data:
+
+volumes:
+  postgres-data:
