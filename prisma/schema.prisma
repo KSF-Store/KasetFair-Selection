@@ -12,3 +12,23 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Nisit {
+  id         Int       @id @default(autoincrement())
+  email      String    @unique
+  name       String
+  nisitId    String    @unique
+  password   String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  Stores     NisitStore[]
+}
+model NisitStore {
+  id               Int       @id @default(autoincrement())
+  nisitId          String
+  storeName        String
+  storeDescription String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  owner            Nisit     @relation(fields: [nisitId], references: [nisitId])
+}
