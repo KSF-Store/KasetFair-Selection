@@ -10,9 +10,10 @@ services:
       context: .
       dockerfile: Dockerfile 
     container_name: KSF_development
-    working_dir: /app
+    working_dir: /src/app
     volumes:
-      - .:/app
+      - .:/src/app
+      - /src/app/node_modules
     ports:
       - 3000:3000
       - 5555:5555
