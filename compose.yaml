@@ -10,7 +10,7 @@ services:
       context: .
       dockerfile: Dockerfile 
     container_name: KSF_development
-    working_dir: /usr/src/app
+    working_dir: /app
     volumes:
       - .:/app
     ports:
@@ -23,7 +23,7 @@ services:
       - db
     networks:
       - app-network
-    
+
   db:
     image: postgres
     container_name: KSF_container
