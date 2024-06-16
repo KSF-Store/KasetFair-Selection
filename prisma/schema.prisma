@@ -32,3 +32,11 @@ model NisitStore {
   updatedAt        DateTime  @updatedAt
   owner            Nisit     @relation(fields: [nisitId], references: [nisitId])
 }
+
+model Table {
+  id         Int @id @default(autoincrement())
+  zone       String
+  start      Int
+  end        Int
+  alreadyUse Boolean @default(false)
+}
