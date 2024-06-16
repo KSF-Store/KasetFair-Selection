@@ -15,7 +15,7 @@ export default async function UserDetail({}: Props) {
     }
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="flex items-center justify-center">
             <div className="bg-white shadow-lg rounded-lg p-10 max-w-sm w-full">
                 <div className="flex flex-col items-center">
                     <Image

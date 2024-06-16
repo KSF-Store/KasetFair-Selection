@@ -1,6 +1,6 @@
 'use client'
 
-import OnUserSignIn from '@/server/OnUserSignIn';
+import OnUserSignIn from '@/server/auth/OnUserSignIn';
 import React from 'react';
 
 type Props = {};
