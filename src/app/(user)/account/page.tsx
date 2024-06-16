@@ -7,9 +7,7 @@ import SignoutTemp from '@/components/authen/signOut/signoutTemp'
 type Props = {}
 
 export default function page({}: Props) {
-    const onButtonClick = async () => {   
 
-    }
     return (
         <section className='flex flex-col items-center justify-center min-h-screen bg-gray-100 gap-y-[2vh]'>
             <UserDetail/>

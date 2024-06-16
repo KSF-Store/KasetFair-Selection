@@ -8,7 +8,7 @@ type Props = {};
 
 export default async function UserDetail({}: Props) {
     const session = await auth();
-
+    console.log(session)
     if (!session?.user) {
         // Redirect to sign-in page if the user is not logged in
         return redirect('/');
