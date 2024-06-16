@@ -15,9 +15,13 @@ export const authOptions : NextAuthConfig = {
                     prompt : "consent",
                 }
             },
-
         })
     ],
+    pages:{
+        signIn : "/sign-in",
+        signOut : "/sign-out",
+        error : "/auth-error",
+    },
     session : {
         strategy : "jwt",
     },
