@@ -13,7 +13,6 @@ services:
     working_dir: /src/app
     volumes:
       - .:/src/app
-      - /src/app/node_modules
     ports:
       - 3000:3000
       - 5555:5555
