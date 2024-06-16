@@ -14,7 +14,7 @@ services:
     volumes:
       - .:/app
     ports:
-      - 4000:4000
+      - 3000:3000
       - 5555:5555
     environment:
       - NODE_ENV=${NODE_ENV}

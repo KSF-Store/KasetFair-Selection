@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y postgresql-client
 COPY . .
 
 # Expose the port the app runs on
-EXPOSE 4000
+EXPOSE 3000
 
 # Start the Next.js application
 CMD ["npm", "run", "dev"]
