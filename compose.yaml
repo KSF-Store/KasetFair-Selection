@@ -10,7 +10,7 @@ services:
       context: .
       dockerfile: Dockerfile 
     container_name: KSF_development
-    working_dir: /app
+    working_dir: /usr/src/app
     volumes:
       - .:/app
     ports:
