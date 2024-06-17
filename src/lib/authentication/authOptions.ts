@@ -30,7 +30,7 @@ export const authOptions : NextAuthConfig = {
         async jwt({ token, user }) {
           // Add custom attributes to the token here
           if (user) {
-            token.id = user.id;
+            token.id = String(user.id);
             token.role = "user"; // Example: adding a custom role attribute
             // Add more custom attributes as needed
           }
@@ -40,7 +40,7 @@ export const authOptions : NextAuthConfig = {
           // Add custom attributes to the session here
           if (token) {
             session.user.id = token.id ;
-            session.user.role = "kuykheng"; // Example: adding the custom role attribute to the session
+            session.user.role = token.role; // Example: adding the custom role attribute to the session
             // Add more custom attributes as needed
           }
           return session;
