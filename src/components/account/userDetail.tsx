@@ -4,12 +4,12 @@ import React from 'react';
 
 import Image from 'next/image';
 
-import OnGetCurrentSession from '@/utils/getSession/getCurrentUser';
+import OnGetCurrentUser from '@/utils/getSession/getCurrentUser';
 
 type Props = {};
 
 export default async function UserDetail({}: Props) {
-    const currentUser = await OnGetCurrentSession()
+    const currentUser = await OnGetCurrentUser()
 
     return (
         <div className="flex items-center justify-center">

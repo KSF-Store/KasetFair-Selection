@@ -4,7 +4,7 @@ import { auth } from "@/lib/authentication/auth"
 
 import { redirect } from "next/navigation"
 
-export default async function OnGetCurrentSession(){
+export default async function OnGetCurrentUser(){
     const session = await auth() 
 
     if (!session?.user?.id){
