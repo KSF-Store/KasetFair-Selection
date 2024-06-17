@@ -15,28 +15,30 @@ datasource db {
 
 model Nisit {
   id         Int       @id @default(autoincrement())
+  nisitId    String?   @unique
   email      String    @unique
   name       String
-  nisitId    String    @unique
-  password   String
+  role       String    
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
-  Stores     NisitStore[]
+  Stores     NisitStore?
 }
 model NisitStore {
   id               Int       @id @default(autoincrement())
-  nisitId          String
+  nisitModelId     Int       @unique
+  nisitId          String?   @unique
   storeName        String
   storeDescription String?
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
-  owner            Nisit     @relation(fields: [nisitId], references: [nisitId])
+  owner            Nisit     @relation(fields: [nisitModelId], references: [id])
+  BoothId          Int?      @unique
+  Booth            Booth?    @relation(fields: [BoothId], references: [id])
 }
 
-model Table {
-  id         Int @id @default(autoincrement())
-  zone       String
-  start      Int
-  end        Int
-  alreadyUse Boolean @default(false)
+model Booth {
+  id             Int          @id @default(autoincrement())  
+  name           String
+  isAssigned     Boolean      @default(false)
+  Store          NisitStore?
 }
