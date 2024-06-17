@@ -8,7 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         try {
             const payload: Nisit = req.body;
             const { email, name, role } = payload;
-
+            console.log(email)
             const existingUser = await prismaDb.nisit.findUnique({ where: { email } });
             if (existingUser) {
                 return res.json({ message: "User exist", status: 400 });

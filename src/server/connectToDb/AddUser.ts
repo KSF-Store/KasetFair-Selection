@@ -3,7 +3,7 @@ import OnGetCurrentUser from "@/utils/getSession/getCurrentUser";
 
 export default async function OnAddUserToDb(){
     const user = await OnGetCurrentUser()
-    const response = await fetch('api/users/user',{
+    const response = await fetch('/api/users/user',{
         method : "POST",
         headers: {
             "Content-Type": "application/json",
@@ -14,6 +14,5 @@ export default async function OnAddUserToDb(){
             role : user?.role
         }),
     })
-    
-
+    console.log(response)
 }
