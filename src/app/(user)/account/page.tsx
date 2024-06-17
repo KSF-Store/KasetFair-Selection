@@ -1,17 +1,17 @@
+import React from "react";
 
-import React from 'react'
+import UserDetail from "@/components/account/userDetail";
+import SignoutTemp from "@/components/authen/signOut/signoutTemp";
+import Link from "next/link";
 
-import UserDetail from '@/components/account/userDetail'
-import SignoutTemp from '@/components/authen/signOut/signoutTemp'
-
-type Props = {}
+type Props = {};
 
 export default function page({}: Props) {
-
     return (
-        <section className='flex flex-col items-center justify-center min-h-screen bg-gray-100 gap-y-[2vh]'>
-            <UserDetail/>
-            <SignoutTemp/>
+        <section className="flex flex-col items-center justify-center min-h-screen bg-gray-100 gap-y-[2vh]">
+            <UserDetail />
+            <Link href="/register">Click me!</Link>
+            <SignoutTemp />
         </section>
-    )
+    );
 }
