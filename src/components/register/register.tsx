@@ -1,5 +1,4 @@
 import { useState } from "react";
-import OnGetCurrentSession from "@/utils/getSession/getCurrentUser";
 
 export default function Register() {
     const [store, setStore] = useState({
@@ -11,14 +10,12 @@ export default function Register() {
     const onCreate = async () => {
         try {
             setLoading(true);
-            const user = await OnGetCurrentSession();
-            const body = { email: user.email, ...store };
             const response = await fetch("/api/stores/store", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(body),
+                body: JSON.stringify(store),
             });
             const data = await response.json();
             console.log(data);

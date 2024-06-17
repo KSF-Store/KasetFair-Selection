@@ -1,4 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { parse } from "cookie";
+import { getUserFromCookie } from "@/utils/jwtAccess/getToken";
 import { prismaDb } from "@/lib/prismaDb";
 import type { NisitStore } from "@prisma/client";
 
@@ -6,9 +8,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (req.method === "POST") {
         try {
             const payload = req.body;
-            const { email, storeName, storeDescription } = payload;
+            const { storeName, storeDescription } = payload;
 
-            const nisit = await prismaDb.nisit.findUnique({ where: { email } });
+            const user = await getUserFromCookie(req);
+            if (!user?.email) {
+                return res.json({ message: "Session unauthorized", status: 401 });
+            }
+
+            const nisit = await prismaDb.nisit.findUnique({ where: { email: user.email } });
             if (!nisit) {
                 return res.json({ message: "User not found", status: 404 });
             }
