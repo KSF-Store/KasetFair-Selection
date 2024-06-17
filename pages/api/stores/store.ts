@@ -5,23 +5,24 @@ import type { NisitStore } from "@prisma/client";
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "POST") {
         try {
-            const payload: NisitStore = req.body;
-            const { nisitId, storeName, storeDescription } = payload;
+            const payload = req.body;
+            const { email, storeName, storeDescription } = payload;
 
-            const nisit = await prismaDb.nisit.findUnique({ where: { nisitId } });
+            const nisit = await prismaDb.nisit.findUnique({ where: { email } });
             if (!nisit) {
                 return res.json({ message: "User not found", status: 404 });
             }
 
             const newStore = await prismaDb.nisitStore.create({
                 data: {
-                    nisitId,
+                    nisitModelId: nisit.id,
                     storeName,
                     storeDescription: storeDescription || "",
                 },
             });
             return res.json({ data: newStore, message: "Create store successful", status: 201 });
         } catch (error: any) {
+            console.log(error);
             return res.json({ message: "Create store failed", status: 500 });
         }
     } else if (req.method === "PUT") {
