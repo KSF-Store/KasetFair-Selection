@@ -1,8 +1,9 @@
+
 import { NextAuthConfig } from "next-auth";
-
-
-
 import Google from "next-auth/providers/google"
+
+import OnAddUserToDb from "@/server/connectToDb/AddUser";
+
 
 export const authOptions : NextAuthConfig = { 
     providers : [ 
@@ -27,6 +28,11 @@ export const authOptions : NextAuthConfig = {
     },
     secret : process.env.AUTH_SECRET,
     callbacks: {
+      async signIn({ user, account, profile }) {
+        // Custom logic after user signs in
+        // await OnAddUserToDb(user); // Call your function to add the user to the database
+        return true;
+      },
         async jwt({ token, user }) {
           // Add custom attributes to the token here
           if (user) {
@@ -45,6 +51,7 @@ export const authOptions : NextAuthConfig = {
           }
           return session;
         },
-    }
+    },
+    
 
 }

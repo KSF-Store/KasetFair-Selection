@@ -7,5 +7,5 @@ import OnAddUserToDb from "../connectToDb/AddUser"
 
 
 export default async function OnUserSignIn (action: string) {
-    await signIn(action,{redirectTo: '/account'})
+    const signInResult = await signIn(action, { redirectTo: '/account' });
 }

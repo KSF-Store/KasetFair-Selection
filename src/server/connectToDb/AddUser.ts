@@ -1,8 +1,6 @@
-import OnGetCurrentUser from "@/utils/getSession/getCurrentUser";
 
 
-export default async function OnAddUserToDb(){
-    const user = await OnGetCurrentUser()
+export default async function OnAddUserToDb(user : any){
     const response = await fetch('/api/users/user',{
         method : "POST",
         headers: {
@@ -14,5 +12,5 @@ export default async function OnAddUserToDb(){
             role : user?.role
         }),
     })
-    console.log(response)
+
 }

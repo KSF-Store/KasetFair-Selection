@@ -8,10 +8,7 @@ import HomePage from "@/components/homepage/home";
 
 export default async function Home() {
   const session = await auth()
-  if (session?.user){
-    //if already logged in
-    // await OnAddUserToDb()
-  }
+
   console.log(session)
   return (
     <main className="">
