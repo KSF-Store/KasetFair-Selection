@@ -1,8 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { parse } from "cookie";
-import { getUserFromCookie } from "@/utils/jwtAccess/getToken";
 import { prismaDb } from "@/lib/prismaDb";
 import type { NisitStore } from "@prisma/client";
+import getNisitAndStore from "@/utils/api/stores/GetNisitAndStore";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "POST") {
@@ -10,14 +9,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             const payload = req.body;
             const { storeName, storeDescription } = payload;
 
-            const user = await getUserFromCookie(req);
-            if (!user?.email) {
-                return res.json({ message: "Session unauthorized", status: 401 });
-            }
-
-            const nisit = await prismaDb.nisit.findUnique({ where: { email: user.email } });
-            if (!nisit) {
-                return res.json({ message: "User not found", status: 404 });
+            const { nisit, store } = await getNisitAndStore(req);
+            if (store) {
+                return res.json({ message: "Store already created", status: 400 });
             }
 
             const newStore = await prismaDb.nisitStore.create({
@@ -35,18 +29,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     } else if (req.method === "PUT") {
         try {
             const payload: NisitStore = req.body;
-            const { id, storeName, storeDescription } = payload;
+            const { storeName, storeDescription } = payload;
 
-            const existingStore = await prismaDb.nisitStore.findUnique({ where: { id } });
-            if (!existingStore) {
-                return res.json({ error: "Store not found", status: 404 });
+            const { nisit, store } = await getNisitAndStore(req);
+
+            if (!store) {
+                return res.json({ message: "Store not existed", status: 404 });
             }
 
             const updatedStore = await prismaDb.nisitStore.update({
-                where: { id },
+                where: { id: nisit.id },
                 data: {
-                    storeName: storeName || existingStore.storeName,
-                    storeDescription: storeDescription || existingStore.storeDescription,
+                    storeName: storeName || store.storeName,
+                    storeDescription: storeDescription || store.storeDescription,
                 },
             });
             return res.json({ data: updatedStore, message: "Store updated", status: 200 });
@@ -55,24 +50,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.json({ message: "Update store failed", status: 500 });
         }
     } else if (req.method === "GET") {
-        const { id } = req.query;
-        if (id) {
-            if (!id || typeof id !== "string") {
-                return res.json({ message: "Invalid id parameter", status: 400 });
-            }
-            const parseId = parseInt(id, 10);
-            const store = prismaDb.nisitStore.findUnique({ where: { id: parseId } });
+        // Prototype, Now using cookie to retrive store
+        try {
+            const { nisit, store } = await getNisitAndStore(req);
             if (!store) {
-                return res.json({ message: "Store not found", status: 404 });
+                return res.json({ message: "Store not existed", status: 404 });
             }
             return res.json({ data: store, message: "Store found", status: 200 });
-        } else {
-            const stores = await prismaDb.nisitStore.findMany();
-            return res.json({
-                data: stores,
-                message: "Retrieve all stores successful",
-                status: 200,
-            });
+        } catch (error: any) {
+            return res.json({ message: "Retrive store failed ", status: 500 });
         }
     }
 }
