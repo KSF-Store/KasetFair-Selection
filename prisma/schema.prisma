@@ -21,7 +21,7 @@ model Nisit {
   role       String    
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
-  Stores     NisitStore?
+  Store     NisitStore?
 }
 model NisitStore {
   id               Int       @id @default(autoincrement())
