@@ -8,8 +8,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const method = req.method ;
     try{
         if (method === "GET"){
-            // Get all store in database
-
+            //get current nisit's store
+            // Prototype, Now using cookie to retrive store
+            try {
+                const { nisit, store } = await getNisitAndStore(req);
+                if (store) {
+                    return res.json({ data: store, message: "Store found", status: 200 });   
+                }
+                return res.json({ message: "Store not existed", status: 404 });
+            } catch (error: any) {
+                return res.json({ message: "Retrive store failed ", status: 500 });
+            }
         }
         else if (method === "POST"){
             try {

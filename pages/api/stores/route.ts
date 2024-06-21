@@ -1,7 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { prismaDb } from "@/lib/prismaDb";
-import type { NisitStore } from "@prisma/client";
-import getNisitAndStore from "@/utils/api/stores/GetNisitAndStore";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     // get all stores on database for admin dashboard
