@@ -5,9 +5,8 @@ import getNisitAndStore from "@/utils/api/stores/GetNisitAndStore";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     // get or set with current store of nisit
-    const method = req.method ;
-    try{
-        if (method === "GET"){
+
+        if (req.method === "GET"){
             //get current nisit's store
             // Prototype, Now using cookie to retrive store
             try {
@@ -20,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 return res.json({ message: "Retrive store failed ", status: 500 });
             }
         }
-        else if (method === "POST"){
+        else if (req.method === "POST"){
             try {
                 // init store for current nisit
                 const payload = req.body;
@@ -44,7 +43,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 return res.json({ message: "Create store failed", status: 500 });
             }
         }
-        else if (method === "PUT"){
+        else if (req.method === "PUT"){
             try {
                 // update store details for current nisit after register 
                 const payload: NisitStore = req.body;
@@ -69,8 +68,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 return res.json({ message: "Update store failed", status: 500 });
             }
         }
-
-    }catch(err){
-        console.log(err)
-    }
 }

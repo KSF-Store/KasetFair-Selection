@@ -10,13 +10,15 @@ export default function Register() {
     const onCreate = async () => {
         try {
             setLoading(true);
-            const response = await fetch("/api/stores/current", {
+
+            const response = await fetch('/api/stores/current/route', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(store),
             });
+
             const data = await response.json();
             console.log(data);
         } catch (error: any) {
