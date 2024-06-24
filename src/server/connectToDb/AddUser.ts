@@ -2,7 +2,7 @@ export default async function OnAddUserToDb(user: any) {
     const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
 
     try {
-        const response = await fetch(`${baseUrl}/api/users/user`, {
+        const response = await fetch(`${baseUrl}/api/users`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -17,7 +17,7 @@ export default async function OnAddUserToDb(user: any) {
             throw new Error("Something bad happen in OnAddUserToDb");
         }
 
-        console.log(await response.json());
+        // console.log(await response.json());
     } catch (error: any) {
         console.log(error);
     }

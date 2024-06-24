@@ -11,7 +11,7 @@ export default function Register() {
         try {
             setLoading(true);
 
-            const response = await fetch('/api/stores/current/route', {
+            const response = await fetch("/api/stores/current", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
