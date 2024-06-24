@@ -1,8 +1,8 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest } from "next/server";
 import { prismaDb } from "@/lib/prismaDb";
 import { getUserFromCookie } from "@/utils/jwtAccess/getToken";
 
-export default async function getNisitAndStore(req: NextApiRequest) {
+export default async function getNisitAndStore(req: NextRequest) {
     const user = await getUserFromCookie(req);
     if (!user) {
         throw new Error("Session unauthorized");
