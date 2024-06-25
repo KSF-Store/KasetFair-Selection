@@ -9,7 +9,6 @@ import HomePage from "@/components/homepage/home";
 export default async function Home() {
   const session = await auth()
 
-  console.log(session)
   return (
     <main className="">
       <HomePage/>
