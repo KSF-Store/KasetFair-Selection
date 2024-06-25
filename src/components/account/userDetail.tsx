@@ -4,13 +4,13 @@ import React from 'react';
 
 import Image from 'next/image';
 
-import OnGetCurrentUser from '@/utils/getSession/getCurrentUser';
+import OnGetCurrentSession from '@/utils/getSession/getCurrentSession';
 
 type Props = {};
 
 export default async function UserDetail({}: Props) {
-    const currentUser = await OnGetCurrentUser()
-
+    const session = await OnGetCurrentSession()
+    const currentUser = session?.user 
     return (
         <div className="flex items-center justify-center">
             <div className="bg-white shadow-lg rounded-lg p-10 max-w-sm w-full">
