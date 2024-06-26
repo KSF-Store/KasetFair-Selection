@@ -28,7 +28,7 @@
         "**/*.ts",
         "**/*.tsx",
         ".next/types/**/*.ts",
-        "src/utils/jwtAccess/getToken.js"
+        "src/utils/jwtAccess/GetDataFromToken.ts"
     ],
     "exclude": ["node_modules"]
 }
