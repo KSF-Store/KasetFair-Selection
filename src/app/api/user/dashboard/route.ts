@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prismaDb } from "@/lib/prismaDb";
+import { setCookie } from "@/utils/jwtAccess/Cookie";
 
 export default async function POST(req: NextRequest) {
     try {
@@ -29,6 +30,7 @@ export default async function POST(req: NextRequest) {
                 reservePhone2,
             },
         });
+        setCookie("token", { userId: user.userId }, "1d");
         const response = NextResponse.json(
             { data: user, message: "User registered successfully" },
             { status: 201 }
@@ -57,7 +59,6 @@ export async function GET(req: NextRequest) {
     //             { status: 401 }
     //         );
     //     }
-
     //     const userData = await prismaDb.user.findUnique({ where: { userId } });
     //     if (!userData) {
     //         return NextResponse.json(
@@ -65,7 +66,6 @@ export async function GET(req: NextRequest) {
     //             { status: 404 }
     //         );
     //     }
-
     //     return NextResponse.json(
     //         { data: userData, message: "User retrieved successfully" },
     //         { status: 200 }
