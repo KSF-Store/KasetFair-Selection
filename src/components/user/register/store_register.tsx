@@ -1,12 +1,14 @@
 import axios from "axios";
 import { useState } from "react";
 
-import { UserType , StoreType } from "@/interface/dbType";
+import { UserType, StoreType } from "@/interface/dbType";
+import { StorePayload } from "@/interface/payloadType";
 
 import EditStore from "@/utils/api/stores/EditStore";
 
 export default function StoreRegister() {
     const [user, setUser] = useState<UserType>({
+        userId: 1,
         name: "",
         nisitId: "",
         faculty: "",
@@ -16,14 +18,15 @@ export default function StoreRegister() {
         reservePhone2: "",
     });
 
-    const [store, setStore] = useState<StoreType>({
+    const [store, setStore] = useState<StorePayload>({
         name: "",
-        storeDescription: "",
-        storeSlogan: "",
+        description: "",
+        slogan: "",
         mainProductType: "",
         subProductType: "",
         innovation: "",
-        Member: [] , 
+        invitingNisitId: [],
+        sdgId: [1, 2, 3],
     });
 
     const [loading, setLoading] = useState(false);
@@ -31,15 +34,16 @@ export default function StoreRegister() {
     const onCreate = async () => {
         try {
             setLoading(true);
-            EditStore({ User: user, Store: store })
+            const response = EditStore({ User: user, Store: store });
+            console.log(response);
             // console.log(data);
         } catch (error) {
             console.error("Error creating store:", error);
         } finally {
             setLoading(false);
         }
-        console.log("user : ",user)
-        console.log("store : ",store)
+        console.log("user : ", user);
+        console.log("store : ", store);
     };
 
     if (loading) {
@@ -70,7 +74,9 @@ export default function StoreRegister() {
                     id="nisitId"
                     type="text"
                     value={user.nisitId}
-                    onChange={(e) => setUser({ ...user, nisitId: e.target.value })}
+                    onChange={(e) =>
+                        setUser({ ...user, nisitId: e.target.value })
+                    }
                     placeholder="Nisit ID"
                 />
                 <label className="self-start" htmlFor="faculty">
@@ -81,17 +87,21 @@ export default function StoreRegister() {
                     id="faculty"
                     type="text"
                     value={user.faculty}
-                    onChange={(e) => setUser({ ...user, faculty: e.target.value })}
+                    onChange={(e) =>
+                        setUser({ ...user, faculty: e.target.value })
+                    }
                     placeholder="Faculty"
                 />
-                 <label className="self-start" htmlFor="year">
+                <label className="self-start" htmlFor="year">
                     Year
                 </label>
                 <select
                     className="mb-2 w-full rounded-lg border px-4 py-2"
                     id="year"
                     value={user.year}
-                    onChange={(e) => setUser({ ...user, year: Number(e.target.value) })}
+                    onChange={(e) =>
+                        setUser({ ...user, year: Number(e.target.value) })
+                    }
                 >
                     <option value={1}>1</option>
                     <option value={2}>2</option>
@@ -107,7 +117,9 @@ export default function StoreRegister() {
                     id="phone"
                     type="text"
                     value={user.phone}
-                    onChange={(e) => setUser({ ...user, phone: e.target.value })}
+                    onChange={(e) =>
+                        setUser({ ...user, phone: e.target.value })
+                    }
                     placeholder="Phone"
                 />
                 <label className="self-start" htmlFor="reservePhone1">
@@ -118,7 +130,9 @@ export default function StoreRegister() {
                     id="reservePhone1"
                     type="text"
                     value={user.reservePhone1}
-                    onChange={(e) => setUser({ ...user, reservePhone1: e.target.value })}
+                    onChange={(e) =>
+                        setUser({ ...user, reservePhone1: e.target.value })
+                    }
                     placeholder="Reserve Phone 1"
                 />
                 <label className="self-start" htmlFor="reservePhone2">
@@ -129,7 +143,9 @@ export default function StoreRegister() {
                     id="reservePhone2"
                     type="text"
                     value={user.reservePhone2}
-                    onChange={(e) => setUser({ ...user, reservePhone2: e.target.value })}
+                    onChange={(e) =>
+                        setUser({ ...user, reservePhone2: e.target.value })
+                    }
                     placeholder="Reserve Phone 2"
                 />
                 <h2 className="text-xl mb-2">Store Information</h2>
@@ -141,7 +157,9 @@ export default function StoreRegister() {
                     id="storeName"
                     type="text"
                     value={store.name}
-                    onChange={(e) => setStore({ ...store, name: e.target.value })}
+                    onChange={(e) =>
+                        setStore({ ...store, name: e.target.value })
+                    }
                     placeholder="Store Name"
                 />
                 <label className="self-start" htmlFor="mainProductType">
@@ -152,7 +170,9 @@ export default function StoreRegister() {
                     id="mainProductType"
                     type="text"
                     value={store.mainProductType}
-                    onChange={(e) => setStore({ ...store, mainProductType: e.target.value })}
+                    onChange={(e) =>
+                        setStore({ ...store, mainProductType: e.target.value })
+                    }
                     placeholder="Main Product Type"
                 />
                 <label className="self-start" htmlFor="subProductType">
@@ -163,7 +183,9 @@ export default function StoreRegister() {
                     id="subProductType"
                     type="text"
                     value={store.subProductType}
-                    onChange={(e) => setStore({ ...store, subProductType: e.target.value })}
+                    onChange={(e) =>
+                        setStore({ ...store, subProductType: e.target.value })
+                    }
                     placeholder="Sub Product Type"
                 />
                 <label className="self-start" htmlFor="innovation">
@@ -174,7 +196,9 @@ export default function StoreRegister() {
                     id="innovation"
                     type="text"
                     value={store.innovation}
-                    onChange={(e) => setStore({ ...store, innovation: e.target.value })}
+                    onChange={(e) =>
+                        setStore({ ...store, innovation: e.target.value })
+                    }
                     placeholder="Innovation"
                 />
                 <button

@@ -5,31 +5,83 @@ import { StoreEditPayload } from "@/interface/payloadType";
 
 export async function POST(req: NextRequest) {
     try {
-        // const {
-        //     storeRole,
-        //     name,
-        //     mainProductType,
-        //     subProductType,
-        //     innovation,
-        //     ownerId,
-        // } = await req.json();
+        //           user: {
+        //       |     userId: 1,
+        //       |     name: 'trettre',
+        //       |     nisitId: '43trert',
+        //       |     faculty: 'rere',
+        //       |     year: 4,
+        //       |     phone: '435rt',
+        //       |     reservePhone1: '',
+        //       |     reservePhone2: ''
+        //       |   },
+        //       |   store: {
+        //       |     name: 'rettre',
+        //       |     description: '',
+        //       |     slogan: '',
+        //       |     mainProductType: 'rteert',
+        //       |     subProductType: 'rteret',
+        //       |     innovation: 're',
+        //       |     invitingNisitId: [],
+        //       |     sdgId: [ 1, 2, 3 ]
+        //       |   }
+        //       | }
 
-        const payload : StoreEditPayload = await req.json();
+        const payload: StoreEditPayload = await req.json();
 
-        console.log(payload)
-        const Store = payload.Store ; 
-        const User = payload.User ;
+        console.log("In API", payload);
+        const Store = payload.Store;
+        const User = payload.User;
+
+        try {
+            console.log("Start retrive");
+            console.log(Store.invitingNisitId, Store.sdgId);
+        } catch (error: any) {
+            console.log("what");
+        }
+        if (Store.invitingNisitId && Store.invitingNisitId.length > 0) {
+            const validInvitingUsers = await prismaDb.user.findMany({
+                where: { nisitId: { in: Store.invitingNisitId } },
+                select: { userId: true },
+            });
+            console.log(validInvitingUsers);
+        }
+        if (Store.sdgId && Store.sdgId.length > 0) {
+            const validSdg = await prismaDb.sdg.findMany({
+                where: { sdgId: { in: Store.sdgId } },
+                select: { sdgId: true },
+            });
+            console.log(validSdg);
+        }
+
+        // const sdgIdArr = validSdg.map((each) => each.sdgId);
+        // console.log("Validate data: ", validInvitingUsers, validSdg);
 
         // const store = await prismaDb.store.create({
         //     data: {
-        //         storeRole : Store.storeRole,
-
+        //         storeRole: Store.storeRole,
+        //         name: Store.name,
+        //         description: Store.description,
+        //         slogan: Store.slogan,
+        //         mainProductType: Store.mainProductType,
+        //         subProductType: Store.subProductType,
+        //         innovation: Store.innovation,
+        //         status: Store.status,
+        //         ownerId: User.userId,
+        //         inviting: validInvitingUsers
+        //             ? {
+        //                   connect: validInvitingUsers.map(({ userId }) => ({
+        //                       userId,
+        //                   })),
+        //               }
+        //             : undefined,
+        //         Sdg: validSdg ? {conenect: validSdg} : undefined
         //     },
         // });
 
         return NextResponse.json(
             {
-                data: Store,
+                data: [],
                 message: "Create store succesful",
             },
             { status: 201 }
