@@ -15,13 +15,13 @@ datasource db {
 
 model User {
   userId          Int       @id @default(autoincrement())
-  nisitId         String    @unique
-  role            String
-  name            String
-  faculty         String
-  year            Int
-  address         String
-  phone           String    
+  nisitId         String?    @unique
+  role            String?
+  name            String?
+  faculty         String?
+  year            Int?
+  address         String?
+  phone           String?    
   reservePhone1   String?
   reservePhone2   String?
   storeId         Int?
@@ -30,25 +30,25 @@ model User {
 
 model Store {
   storeId         Int       @id @default(autoincrement())
-  storeRole       String
-  name            String    @unique
-  mainProductType String
+  storeRole       String?
+  name            String?   @unique
+  mainProductType String?
   subProductType  String?
   innovation      String?
-  status          Int       // 0 for draft, 1 for pending ... 
+  status          Int?       // 0 for draft, 1 for pending ... 
 
-  ownerId         Int       @unique
+  ownerId         Int?       @unique
   Member          User[]
 
-  isAssigned      Boolean   @default(false)
+  isAssigned      Boolean?   @default(false)
   boothId         Int?      @unique
   Booth           Booth?    @relation(fields: [boothId], references: [id])
 }
 
 model Booth { 
   id             Int          @id @default(autoincrement())  
-  name           String   
-  isAssigned     Boolean      @default(false) 
+  name           String?   
+  isAssigned     Boolean?      @default(false) 
   Store          Store?    
 }
 

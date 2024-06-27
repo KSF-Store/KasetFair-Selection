@@ -1,31 +1,27 @@
-import axios from "axios";
+
+import { prismaDb } from "@/lib/prismaDb";
 
 export default async function OnAddUserToDb(user: any) {
-    const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
-
+    // const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
+    console.log(user);
     try {
-        const mockup = {
-            nisitId: "6510503565",
-            role: "std",
-            name: "Ponthep Ho",
-            faculty: "ComEn",
-            year: 3,
-            address: "Chatuchak Bangkok",
-            phone: "0912345678",
-            reservePhone1: "0987654321",
-        };
-        const body = mockup;
-        // const body = {
-        //     email: user?.email,
-        //     name: user?.name,
-        //     role: user?.role,
-        // };
-        const response = await axios.post(`${baseUrl}/api/user`, body);
-        console.log(response);
-        // if (response.) {
-        //     throw new Error("Something bad happen in OnAddUserToDb");
+        const response = await prismaDb.user.create({
+            data : {
+                nisitId: '65102383',
+                role: user.role || null, // Optional field
+                name: user.name || null, // Optional field
+                faculty: user.faculty || null, // Optional field
+                year: user.year || null, // Optional field
+                address: user.address || null, // Optional field
+                phone: user.phone || null ,
+                reservePhone1: user.reservePhone1 || null, // Optional field
+                reservePhone2: user.reservePhone2 || null, // Optional field
+                storeId: user.storeId || null, // Optional field
+            }
+        })
+        console.log(response)
 
-        // console.log(await response.json());
+
     } catch (error: any) {
         console.log(error);
     }

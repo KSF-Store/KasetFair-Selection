@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from 'react'
 
-import type { NisitStore  as StoreType } from "@prisma/client";
+// import type { NisitStore  as StoreType } from "@prisma/client";
+import { StoreType } from '@/interface/dbType';
 
 import Link from 'next/link';
 
@@ -70,9 +71,9 @@ export default function AdminDashboard() {
                 <ul>
                   {storesRender.stores.map(store => (
                     // creating component render this field laters 
-                    <li key={store.id} className="mb-2 p-2 border-b">
+                    <li key={store.storeId} className="mb-2 p-2 border-b">
                       <div>
-                        <h3 className="font-bold">Store name : {store.storeName}</h3>
+                        <h3 className="font-bold">Store name : {store.name}</h3>
                         <p>Store description : {store.storeDescription}</p>                          
                       </div>
                       <button>

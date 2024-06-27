@@ -37,7 +37,7 @@ export const authOptions: NextAuthConfig = {
             };
             // Custom logic after user signs in
             await OnAddUserToDb(customUser); // Call your function to add the user to the database
-            console.log("In authOptions: ", user);
+            console.log("In authOptions: ", customUser);
             return true;
         },
         async jwt({ token, user }) {

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import AdminDashboard from '@/components/dashboard/admin/aDashboard'
+import AdminDashboard from '@/components/admin/aDashboard'
 
 type Props = {}
 
