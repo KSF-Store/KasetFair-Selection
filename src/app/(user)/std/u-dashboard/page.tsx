@@ -1,4 +1,4 @@
-import UserDashboard from '@/components/dashboard/user/uDashboard'
+import UserDashboard from '@/components/admin/dashboard/user/uDashboard'
 import React from 'react'
 
 type Props = {}
