@@ -1,31 +1,35 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prismaDb } from "@/lib/prismaDb";
 
+import { StoreEditPayload } from "@/interface/payloadType";
+
 export async function POST(req: NextRequest) {
     try {
-        const {
-            storeRole,
-            name,
-            mainProductType,
-            subProductType,
-            innovation,
-            ownerId,
-        } = await req.json();
+        // const {
+        //     storeRole,
+        //     name,
+        //     mainProductType,
+        //     subProductType,
+        //     innovation,
+        //     ownerId,
+        // } = await req.json();
 
-        const store = await prismaDb.store.create({
-            data: {
-                storeRole,
-                name,
-                mainProductType,
-                subProductType,
-                innovation,
-                status: 1,
-                ownerId,
-            },
-        });
+        const payload : StoreEditPayload = await req.json();
+
+        console.log(payload)
+        const Store = payload.Store ; 
+        const User = payload.User ;
+
+        // const store = await prismaDb.store.create({
+        //     data: {
+        //         storeRole : Store.storeRole,
+
+        //     },
+        // });
+
         return NextResponse.json(
             {
-                data: store,
+                data: Store,
                 message: "Create store succesful",
             },
             { status: 201 }

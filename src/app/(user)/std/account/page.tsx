@@ -1,7 +1,8 @@
 import React from "react";
 
-import UserDetail from "@/interface/account/userDetail";
+import UserDetail from "@/components/user/account/userDetail";
 import SignoutTemp from "@/components/authen/signOut/signoutTemp";
+
 import Link from "next/link";
 
 type Props = {};

@@ -3,8 +3,9 @@ import { useState } from "react";
 
 import { UserType , StoreType } from "@/interface/dbType";
 
+import EditStore from "@/utils/api/stores/EditStore";
 
-export default function Register() {
+export default function StoreRegister() {
     const [user, setUser] = useState<UserType>({
         name: "",
         nisitId: "",
@@ -30,12 +31,8 @@ export default function Register() {
     const onCreate = async () => {
         try {
             setLoading(true);
-            const response = await axios.post("/api/user/store/register", {
-                user,
-                store,
-            });
-            const data = response.data;
-            console.log(data);
+            EditStore({ User: user, Store: store })
+            // console.log(data);
         } catch (error) {
             console.error("Error creating store:", error);
         } finally {
@@ -87,18 +84,21 @@ export default function Register() {
                     onChange={(e) => setUser({ ...user, faculty: e.target.value })}
                     placeholder="Faculty"
                 />
-                <label className="self-start" htmlFor="year">
+                 <label className="self-start" htmlFor="year">
                     Year
                 </label>
-                <input
+                <select
                     className="mb-2 w-full rounded-lg border px-4 py-2"
                     id="year"
-                    type="number"
-                    value={user?.year}
-                    onChange={(e) => setUser({ ...user, year: Number(e.target.value )})}
-                    placeholder="Year"
-                />
-
+                    value={user.year}
+                    onChange={(e) => setUser({ ...user, year: Number(e.target.value) })}
+                >
+                    <option value={1}>1</option>
+                    <option value={2}>2</option>
+                    <option value={3}>3</option>
+                    <option value={4}>4</option>
+                    <option value={5}>5</option>
+                </select>
                 <label className="self-start" htmlFor="phone">
                     Phone
                 </label>

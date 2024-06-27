@@ -1,6 +1,6 @@
 "use client";
 
-import StoreRegister from "@/components/register/store_register";
+import StoreRegister from "@/components/user/register/store_register";
 
 export default function RegisterPage() {
     return (
