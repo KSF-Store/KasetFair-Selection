@@ -1,29 +1,29 @@
-export interface User {
-    userId: number;
+export interface UserType {
     nisitId: string;
-    role: string;
+    role?: string;
     name: string;
-    faculty: string;
-    year: number;
-    address: string;
-    phone: string;
+    faculty?: string;
+    year?: number ;
+    address?: string;
+    phone?: string;
     reservePhone1?: string;
     reservePhone2?: string;
     storeId?: number;
-    Store?: Store;
+    Store?: StoreType;
   }
   
-  export interface Store {
-    storeId: number;
-    storeRole: string;
-    name: string;
+  export interface StoreType {
+    storeRole?: string;
+    name?: string;
+    storeDescription?: string;
+    storeSlogan?: string ; 
     mainProductType: string;
     subProductType?: string;
     innovation?: string;
-    status: number;  // 0 for draft, 1 for pending ...
-    ownerId: number;
-    Member?: User[];
-    isAssigned: boolean;
+    status?: number;  // 0 for draft, 1 for pending ...
+    ownerId?: number;
+    Member?: UserType[];
+    isAssigned?: boolean;
     boothId?: number;
     Booth?: Booth;
   }
@@ -32,5 +32,5 @@ export interface User {
     id: number;
     name: string;
     isAssigned: boolean;
-    Store?: Store;
+    Store?: StoreType;
   }
