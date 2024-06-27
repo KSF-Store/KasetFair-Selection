@@ -1,10 +1,11 @@
 "use client";
-import Register from "@/components/register/register";
+
+import StoreRegister from "@/components/register/store_register";
 
 export default function RegisterPage() {
     return (
         <section>
-            <Register />
+            <StoreRegister/>
         </section>
     );
 }
