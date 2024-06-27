@@ -2,22 +2,24 @@
 import { prismaDb } from "@/lib/prismaDb";
 
 export default async function OnAddUserToDb(user: any) {
-    const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
-
+    // const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
+    console.log(user);
     try {
         const response = await prismaDb.user.create({
             data : {
-                nisitId: user?.nisitId,
-                role: user?.role,
-                name: user?.name,
-                faculty: user?.faculty,
-                year: user?.year,
-                address: user?.address,
-                phone: user?.phone,
-                reservePhone1: user?.reservePhone1,
-                reservePhone2: user?.reservePhone2,
+                nisitId: '65102383',
+                role: user.role || null, // Optional field
+                name: user.name || null, // Optional field
+                faculty: user.faculty || null, // Optional field
+                year: user.year || null, // Optional field
+                address: user.address || null, // Optional field
+                phone: user.phone || null ,
+                reservePhone1: user.reservePhone1 || null, // Optional field
+                reservePhone2: user.reservePhone2 || null, // Optional field
+                storeId: user.storeId || null, // Optional field
             }
         })
+        console.log(response)
 
 
     } catch (error: any) {

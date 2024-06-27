@@ -15,13 +15,13 @@ datasource db {
 
 model User {
   userId          Int       @id @default(autoincrement())
-  nisitId         String    @unique
+  nisitId         String?    @unique
   role            String?
   name            String?
   faculty         String?
   year            Int?
   address         String?
-  phone           String    
+  phone           String?    
   reservePhone1   String?
   reservePhone2   String?
   storeId         Int?
