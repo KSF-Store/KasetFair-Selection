@@ -13,6 +13,7 @@ export interface UserType {
   }
   
   export interface StoreType {
+    storeId: number ; 
     storeRole?: string;
     name?: string;
     storeDescription?: string;
