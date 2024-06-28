@@ -1,5 +1,5 @@
 export interface UserType {
-    userId: number;
+    userId?: number;
     nisitId: string;
     role?: string;
     name: string;
