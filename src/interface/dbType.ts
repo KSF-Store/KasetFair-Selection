@@ -24,7 +24,7 @@ export interface StoreType {
     firstPhone?: string;
     secondPhone?: string;
     thirdPhone?: string;
-    status?: number; // 0 for draft, 1 for pending ...
+    status?: StoreStatus; // 0 for draft, 1 for pending ...
     ownerId?: number;
     Member?: UserType[];
     isAssigned?: boolean;
