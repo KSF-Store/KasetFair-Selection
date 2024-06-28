@@ -7,7 +7,7 @@ import { SDGSList } from "@/utils/sdgs/sdgs";
 import { UserType, StoreType } from "@/interface/dbType";
 import { StorePayload } from "@/interface/payloadType";
 
-import EditStore from "@/utils/api/stores/EditStore";
+import EditUserAndStore from "@/utils/api/stores/EditUserAndStore";
 
 
 
@@ -39,7 +39,7 @@ export default function StoreRegister() {
     const onCreate = async () => {
         try {
             setLoading(true);
-            const response = EditStore({ User: user, Store: store });
+            const response = EditUserAndStore({ User: user, Store: store });
             console.log(response);
             // console.log(data);
         } catch (error) {
@@ -204,7 +204,7 @@ export default function StoreRegister() {
                                 id={e.id.toString()}
                                 // checked={store.innovation.includes(innovation)}
                                 onChange={() => ()=>{
-                                    store.sdgId.push()
+                                    store.sdgId.push(e.id)
                                 }}
                                 className="mr-2"
                             />
