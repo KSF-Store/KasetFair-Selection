@@ -1,6 +1,6 @@
 import { prismaDb } from "@/lib/prismaDb";
 
-export async function connectUserToStore(userId: number, storeId: number) {
+export async function disconnectUserFromStore(userId: number, storeId: number) {
     try {
         const existingUser = await prismaDb.user.findUnique({
             where: { userId },
@@ -10,13 +10,13 @@ export async function connectUserToStore(userId: number, storeId: number) {
         if (!existingUser) {
             throw new Error("User not found");
         }
-        if (existingUser.Store) {
-            throw new Error("User already member of any store");
+        if (!existingUser.Store) {
+            throw new Error("User not already member of any store");
         }
 
         const updatedUser = await prismaDb.user.update({
             where: { userId },
-            data: { Store: { connect: { storeId } }},
+            data: { Store: { disconnect: { storeId } } },
         });
         return updatedUser;
     } catch (error: any) {
