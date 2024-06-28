@@ -13,30 +13,55 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Nisit {
-  id         Int       @id @default(autoincrement())
-  email      String    @unique
-  name       String
-  nisitId    String    @unique
-  password   String
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  Stores     NisitStore[]
-}
-model NisitStore {
-  id               Int       @id @default(autoincrement())
-  nisitId          String
-  storeName        String
-  storeDescription String?
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-  owner            Nisit     @relation(fields: [nisitId], references: [nisitId])
+model User {
+  userId         Int          @id @default(autoincrement())
+  nisitId        String?      
+  email          String?
+  role           String?
+  name           String?
+  faculty        String?
+  year           Int?
+  phone          String?
+  address        String?
+  storeId        Int?
+  Store          Store?      @relation(fields: [storeId], references: [storeId])
+  invited        Store[]     @relation(name: "InvitationStoreToUser")
 }
 
-model Table {
-  id         Int @id @default(autoincrement())
-  zone       String
-  start      Int
-  end        Int
-  alreadyUse Boolean @default(false)
+model Store {
+  storeId         Int         @id @unique @default(autoincrement())       
+  storeRole       String?
+  name            String?     @unique
+  description     String?
+  slogan          String?
+  mainProductType String?
+  subProductType  String?
+  innovation      String?
+  firstPhone      String?    
+  secondPhone     String?
+  thirdPhone      String?
+  status          Int?       // 0 for draft, 1 for pending ... 
+
+  ownerId        Int?       @unique
+  Member         User[]
+
+  isAssigned     Boolean?   @default(false)
+  boothId        Int?       @unique
+  Booth          Booth?     @relation(fields: [boothId], references: [id])   
+  Sdg            Sdg[]      @relation(name: "StoreToSdg")
+  inviting       User[]     @relation(name: "InvitationStoreToUser")
+}
+
+
+model Sdg {
+  sdgId           Int       @id @unique
+  name            String
+  Store           Store[]   @relation(name: "StoreToSdg")
+}
+
+model Booth { 
+  id             Int           @id @default(autoincrement())  
+  name           String?   
+  isAssigned     Boolean?      @default(false) 
+  Store          Store?    
 }

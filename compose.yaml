@@ -10,20 +10,21 @@ services:
       context: .
       dockerfile: Dockerfile 
     container_name: KSF_development
-    working_dir: /app
+    working_dir: /src/app
     volumes:
-      - .:/app
+      - .:/src/app
     ports:
-      - "3001:3000"
-      - "5555:5555"
+      - 3000:3000
+      - 5555:5555
     environment:
       - NODE_ENV=${NODE_ENV}
       - DATABASE_URL=${DATABASE_URL}
+
     depends_on:
       - db
     networks:
       - app-network
-    
+
   db:
     image: postgres
     container_name: KSF_container

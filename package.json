@@ -10,14 +10,22 @@
   },
   "dependencies": {
     "@prisma/client": "^5.15.0",
+    "axios": "^1.7.2",
+    "bcryptjs": "^2.4.3",
+    "cookie": "^0.6.0",
+    "jsonwebtoken": "^9.0.2",
     "next": "14.2.4",
+    "next-auth": "^5.0.0-beta.19",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.14.2",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/uuid": "^10.0.0",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
     "postcss": "^8",

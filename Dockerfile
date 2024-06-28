@@ -1,10 +1,10 @@
-# Use the official Node.js image as the base image
+# Use the official Node.js image
 FROM node:18
 
 # Set the working directory
-WORKDIR /app
+WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json to the working directory
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
 # Install dependencies
@@ -13,11 +13,11 @@ RUN npm install
 # Install PostgreSQL client
 RUN apt-get update && apt-get install -y postgresql-client
 
-# Copy the rest of the application code to the working directory
+# Copy the rest of the application code
 COPY . .
 
 # Expose the port the app runs on
 EXPOSE 3000
 
-# Define the command to run the application
+# Start the Next.js application
 CMD ["npm", "run", "dev"]
