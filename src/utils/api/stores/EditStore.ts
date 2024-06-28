@@ -4,9 +4,10 @@ import { StoreEditPayload } from "@/interface/payloadType";
 
 export default async function EditStore(props: StoreEditPayload) {
     try {
+        const { User, Store } = props;
         const response = await axios.post("/api/user/store/register", {
-            user: props.User,
-            store: props.Store,
+            User,
+            Store,
         });
         const data = response.data;
         console.log(data);
