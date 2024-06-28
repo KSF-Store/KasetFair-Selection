@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 
 import { SDGSList } from "@/utils/sdgs/sdgs";
@@ -11,7 +12,6 @@ import axios from "axios";
 
 export default function StoreRegister() {
     const [user, setUser] = useState<UserType>({
-        userId: 1000,
         name: "",
         nisitId: "",
         faculty: "",
@@ -32,6 +32,15 @@ export default function StoreRegister() {
         invitingNisitId: [],
         sdgId: [],
     })
+
+    const handleCheckboxChange = (id : number) => {
+        setStore(prevStore => {
+            const newSdgId = prevStore.sdgId.includes(id)
+                ? prevStore.sdgId.filter(sdgId => sdgId !== id)
+                : [...prevStore.sdgId, id];
+            return { ...prevStore, sdgId: newSdgId };
+        });
+    };
 
     const [loading, setLoading] = useState(false);
 
@@ -61,7 +70,7 @@ export default function StoreRegister() {
             const result = await response.data
             console.log(result);
         }
-        initData()
+        // initData()
     })
 
     if (loading) {
@@ -210,18 +219,16 @@ export default function StoreRegister() {
                     Innovation
                 </label>
                 <div className="mb-4">
-                    {SDGSList.map((e) => (
+                    {SDGSList.map(e => (
                         <div key={e.id} className="flex items-center mb-2">
                             <input
                                 type="checkbox"
                                 id={e.id.toString()}
-                                // checked={store.innovation.includes(innovation)}
-                                onChange={() => {
-                                    store.sdgId.push(e.id);
-                                }}
+                                checked={store.sdgId.includes(e.id)}
+                                onChange={() => handleCheckboxChange(e.id)}
                                 className="mr-2"
                             />
-                            <label>{e.name}</label>
+                            <label htmlFor={e.id.toString()}>{e.name}</label>
                         </div>
                     ))}
                 </div>

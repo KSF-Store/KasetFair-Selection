@@ -6,7 +6,7 @@ export type StorePayload = Omit<
 > & {
     memberUserId?: number[];
     invitingNisitId?: string[];
-    sdgId?: number[];
+    sdgId: number[];
 };
 
 export type UserPayload = UserType;

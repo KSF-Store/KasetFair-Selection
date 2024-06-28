@@ -7,8 +7,11 @@ import {
 } from "@/interface/payloadType";
 import { connectUserToStore } from "@/utils/api/stores/ConnectUserToStore";
 import { createConnectDisconnectObject } from "@/utils/api/stores/ConnectDisconnectObject";
+import OnGetCurrentSession from "@/utils/getSession/getCurrentSession";
 
 async function createStore(User: UserPayload, Store: StorePayload) {
+    // console.log("In API user  creating : ", User);
+
     const validInvitingUsers = await prismaDb.user.findMany({
         where: { nisitId: { in: Store.invitingNisitId } },
         select: { userId: true },
@@ -56,12 +59,14 @@ async function createStore(User: UserPayload, Store: StorePayload) {
     if (!newStore) {
         throw new Error("Store creation failed");
     }
-
-    await connectUserToStore(User.userId, newStore.storeId);
+    
+    await connectUserToStore(Number(User.userId), newStore.storeId);
     return { payload: newStore, message: "Store create succesful" };
 }
 
 async function updateStore(User: UserPayload, newStoreProps: StorePayload) {
+    // console.log("In API user  update : ", User);
+
     const storeId = newStoreProps.storeId;
     if (!storeId) {
         throw new Error("Invalid Store id");
@@ -140,17 +145,26 @@ async function updateStore(User: UserPayload, newStoreProps: StorePayload) {
 
 export async function POST(req: NextRequest) {
     try {
+        const session = await  OnGetCurrentSession()
+
         const payload: StoreEditPayload = await req.json();
         const Store = payload.Store;
         const User = payload.User;
-        console.log("In API", payload);
+        // console.log("In API", payload);
 
         const existdUser = await prismaDb.user.findUnique({
-            where: { userId: User.userId },
-            select: { storeId: true },
+            where: { email : session.user?.email?.toString() },
+            include: { Store: true },
         });
+    
+        console.log(existdUser)
+        // const existdUser = await prismaDb.user.findUnique({
+        //     where: { userId: User.userId },
+        //     select: { storeId: true },
+        // });
+
         // futre handle
-        console.log(existdUser);
+        // console.log(existdUser);
         if (!existdUser) {
             return NextResponse.json(
                 { message: "User not found" },
@@ -158,21 +172,24 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        let existdStore;
+        let existdStore ;
         if (existdUser.storeId) {
             existdStore = await prismaDb.store.findUnique({
-                where: { storeId: existdUser.storeId! },
+                where: { storeId: existdUser.storeId },
                 select: { ownerId: true },
             });
         }
+        User.userId = existdUser.userId;
 
         let response;
         if (!existdUser.storeId) {
             console.log("Do Create");
+            
             response = await createStore(User, Store);
         } else if (User.userId === existdStore?.ownerId) {
             console.log("Do Update");
             const { storeId, ...restOfStore } = Store;
+
             response = await updateStore(User, {
                 storeId: Store.storeId || existdUser.storeId,
                 ...restOfStore,

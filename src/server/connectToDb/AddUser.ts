@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export default async function OnAddUserToDb(user: any) {
     // const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
-    console.log(user);
+    console.log("adding user to db : ",user);
     try {
         const response = await prismaDb.user.create({
             data: {
