@@ -11,7 +11,8 @@ export default async function OnAddUserToDb(user: any) {
                 userId: 1000,
                 nisitId: uuidv4(),
                 role: user.role || null, // Optional field
-                name: user.name || null, // Optional field
+                name: user.name,
+                email: user.email,
                 faculty: user.faculty || null, // Optional field
                 year: user.year || null, // Optional field
                 address: user.address || null, // Optional field
