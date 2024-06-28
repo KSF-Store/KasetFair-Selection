@@ -1,5 +1,4 @@
-import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { SDGSList } from "@/utils/sdgs/sdgs";
 
@@ -7,6 +6,8 @@ import { UserType, StoreType } from "@/interface/dbType";
 import { StorePayload } from "@/interface/payloadType";
 
 import EditUserAndStore from "@/utils/api/stores/EditUserAndStore";
+
+import axios from "axios";
 
 export default function StoreRegister() {
     const [user, setUser] = useState<UserType>({
@@ -16,7 +17,7 @@ export default function StoreRegister() {
         faculty: "",
         year: 0,
         phone: "",
-    });
+    })
 
     const [store, setStore] = useState<StorePayload>({
         name: "",
@@ -30,14 +31,14 @@ export default function StoreRegister() {
         innovation: "",
         invitingNisitId: [],
         sdgId: [],
-    });
+    })
 
     const [loading, setLoading] = useState(false);
 
     const onCreate = async () => {
         try {
-            console.log(process.env.NEXT_PUBLIC_TEST_USER_ID);
-            console.log(Number(process.env.NEXT_PUBLIC_TEST_USER_ID));
+            // console.log(process.env.NEXT_PUBLIC_TEST_USER_ID);
+            // console.log(Number(process.env.NEXT_PUBLIC_TEST_USER_ID));
             setLoading(true);
             const response = await EditUserAndStore({
                 User: user,
@@ -52,7 +53,16 @@ export default function StoreRegister() {
         }
         console.log("user : ", user);
         console.log("store : ", store);
-    };
+    }
+
+    useEffect(()=>{
+        const initData = async ()=>{
+            const response = await axios.get("/api/user/store/register?userId=1000")
+            const result = await response.data
+            console.log(result);
+        }
+        initData()
+    })
 
     if (loading) {
         return <h1>Loading...</h1>;

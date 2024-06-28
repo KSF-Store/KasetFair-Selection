@@ -65,7 +65,7 @@ export default function AdminDashboard() {
                     <p><strong>Main Product Type:</strong> {store.mainProductType}</p>
                     <p><strong>Sub Product Type:</strong> {store.subProductType}</p>
                     <p><strong>Innovation:</strong> {store.innovation}</p>
-                    <p><strong>First Phone:</strong> {store.primaryPhone}</p>
+                    <p><strong>First Phone:</strong> {store.firstPhone}</p>
                     <p><strong>Second Phone:</strong> {store.secondPhone}</p>
                     <p><strong>Third Phone:</strong> {store.thirdPhone}</p>
                     <p><strong>Status:</strong> {store.status === 0 ? 'Draft' : store.status === 1 ? 'Pending' : 'Unknown'}</p>
