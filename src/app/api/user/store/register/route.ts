@@ -44,6 +44,7 @@ export async function POST(req: NextRequest) {
 
         const newStore = await prismaDb.store.create({
             data: {
+                storeId: User.userId,
                 storeRole: Store.storeRole,
                 name: Store.name,
                 description: Store.description,
@@ -52,7 +53,7 @@ export async function POST(req: NextRequest) {
                 subProductType: Store.subProductType,
                 innovation: Store.innovation,
                 status: Store.status,
-                ownerId: User.userId,
+                ownerId: User.userId, // For Development, On product need to be userId
                 inviting: validInvitingUsers
                     ? {
                           connect: validInvitingUsers.map(({ userId }) => ({
