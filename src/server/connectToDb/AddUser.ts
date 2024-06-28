@@ -10,7 +10,7 @@ export default async function OnAddUserToDb(user: any) {
     try {
         const response = await prismaDb.user.create({
             data : {
-                nisitId: uuidv4() ,
+                // nisitId: uuidv4() ,
                 role: user.role || null, // Optional field
                 name: user.name || null, // Optional field
                 faculty: user.faculty || null, // Optional field
