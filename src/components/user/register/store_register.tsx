@@ -24,7 +24,7 @@ export default function StoreRegister() {
         slogan: "",
         mainProductType: "",
         subProductType: "",
-        primaryPhone: "",
+        firstPhone: "",
         secondPhone: "",
         thirdPhone: "",
         innovation: "",
@@ -124,9 +124,9 @@ export default function StoreRegister() {
                     className="mb-2 w-full rounded-lg border px-4 py-2"
                     id="phone"
                     type="text"
-                    value={store.primaryPhone}
+                    value={store.firstPhone}
                     onChange={(e) =>
-                        setStore({ ...store, primaryPhone: e.target.value })
+                        setStore({ ...store, firstPhone: e.target.value })
                     }
                     placeholder="Phone"
                 />

@@ -21,7 +21,7 @@ export interface StoreType {
     mainProductType: string;
     subProductType?: string;
     innovation?: string;
-    primaryPhone?: string;
+    firstPhone?: string;
     secondPhone?: string;
     thirdPhone?: string;
     status?: number; // 0 for draft, 1 for pending ...
