@@ -1,13 +1,16 @@
 
 import { prismaDb } from "@/lib/prismaDb";
 
+import { v4 as uuidv4 } from 'uuid';
+
+
 export default async function OnAddUserToDb(user: any) {
     // const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
     console.log(user);
     try {
         const response = await prismaDb.user.create({
             data : {
-                nisitId: '65102383',
+                nisitId: uuidv4() ,
                 role: user.role || null, // Optional field
                 name: user.name || null, // Optional field
                 faculty: user.faculty || null, // Optional field
