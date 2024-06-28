@@ -31,9 +31,10 @@ model User {
 }
 
 model Store {
-  storeId        Int        @id @default(autoincrement())
+  id             Int         @id @default(autoincrement())
+  storeId        Int         @unique       
   storeRole      String?
-  name           String?    @unique
+  name           String?     @unique
   description    String?
   slogan         String?
   mainProductType String?
