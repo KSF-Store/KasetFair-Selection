@@ -11,12 +11,12 @@ export async function connectUserToStore(userId: number, storeId: number) {
             throw new Error("User not found");
         }
         if (existingUser.Store) {
-            throw new Error("User already member of store");
+            throw new Error("User already member of any store");
         }
 
         const updatedUser = await prismaDb.user.update({
             where: { userId },
-            data: { Store: { connect: { storeId } } },
+            data: { Store: { connect: { storeId } }},
         });
         return updatedUser;
     } catch (error: any) {
