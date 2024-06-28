@@ -8,15 +8,14 @@ export default async function OnAddUserToDb(user: any) {
     try {
         const response = await prismaDb.user.create({
             data: {
-                nisitId: "6510503565",
+                userId: 1000,
+                nisitId: uuidv4(),
                 role: user.role || null, // Optional field
                 name: user.name || null, // Optional field
                 faculty: user.faculty || null, // Optional field
                 year: user.year || null, // Optional field
                 address: user.address || null, // Optional field
                 phone: user.phone || null,
-                reservePhone1: user.reservePhone1 || null, // Optional field
-                reservePhone2: user.reservePhone2 || null, // Optional field
                 storeId: user.storeId || null, // Optional field
             },
         });

@@ -10,14 +10,12 @@ import EditUserAndStore from "@/utils/api/stores/EditUserAndStore";
 
 export default function StoreRegister() {
     const [user, setUser] = useState<UserType>({
-        userId: 1,
+        userId: 1000,
         name: "",
         nisitId: "",
         faculty: "",
         year: 0,
         phone: "",
-        reservePhone1: "",
-        reservePhone2: "",
     });
 
     const [store, setStore] = useState<StorePayload>({
@@ -26,6 +24,9 @@ export default function StoreRegister() {
         slogan: "",
         mainProductType: "",
         subProductType: "",
+        primaryPhone: "",
+        secondPhone: "",
+        thirdPhone: "",
         innovation: "",
         invitingNisitId: [],
         sdgId: [],
@@ -35,8 +36,13 @@ export default function StoreRegister() {
 
     const onCreate = async () => {
         try {
+            console.log(process.env.NEXT_PUBLIC_TEST_USER_ID);
+            console.log(Number(process.env.NEXT_PUBLIC_TEST_USER_ID));
             setLoading(true);
-            const response = EditUserAndStore({ User: user, Store: store });
+            const response = await EditUserAndStore({
+                User: user,
+                Store: store,
+            });
             console.log(response);
             // console.log(data);
         } catch (error) {
@@ -118,9 +124,9 @@ export default function StoreRegister() {
                     className="mb-2 w-full rounded-lg border px-4 py-2"
                     id="phone"
                     type="text"
-                    value={user.phone}
+                    value={store.primaryPhone}
                     onChange={(e) =>
-                        setUser({ ...user, phone: e.target.value })
+                        setStore({ ...store, primaryPhone: e.target.value })
                     }
                     placeholder="Phone"
                 />
@@ -131,9 +137,9 @@ export default function StoreRegister() {
                     className="mb-2 w-full rounded-lg border px-4 py-2"
                     id="reservePhone1"
                     type="text"
-                    value={user.reservePhone1}
+                    value={store.secondPhone}
                     onChange={(e) =>
-                        setUser({ ...user, reservePhone1: e.target.value })
+                        setStore({ ...store, secondPhone: e.target.value })
                     }
                     placeholder="Reserve Phone 1"
                 />
@@ -144,9 +150,9 @@ export default function StoreRegister() {
                     className="mb-2 w-full rounded-lg border px-4 py-2"
                     id="reservePhone2"
                     type="text"
-                    value={user.reservePhone2}
+                    value={store.thirdPhone}
                     onChange={(e) =>
-                        setUser({ ...user, reservePhone2: e.target.value })
+                        setStore({ ...store, thirdPhone: e.target.value })
                     }
                     placeholder="Reserve Phone 2"
                 />
