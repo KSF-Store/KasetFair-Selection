@@ -166,12 +166,13 @@ export async function GET(req: NextRequest) {
             where: { userId },
             include: { Store: true },
         });
+
         const store = user?.Store;
         if (!store) {
             return NextResponse.json(
                 { message: "User is not member of any store" },
-                { status: 404 }
-            );
+                { status: 204 }
+            )
         }
         return NextResponse.json(
             { data: store, message: "Store retrived succesful" },
