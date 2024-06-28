@@ -3,13 +3,10 @@ import { useState } from "react";
 
 import { SDGSList } from "@/utils/sdgs/sdgs";
 
-
 import { UserType, StoreType } from "@/interface/dbType";
 import { StorePayload } from "@/interface/payloadType";
 
 import EditUserAndStore from "@/utils/api/stores/EditUserAndStore";
-
-
 
 export default function StoreRegister() {
     const [user, setUser] = useState<UserType>({
@@ -193,7 +190,7 @@ export default function StoreRegister() {
                     }
                     placeholder="Sub Product Type"
                 />
-                 <label className="self-start" htmlFor="innovation">
+                <label className="self-start" htmlFor="innovation">
                     Innovation
                 </label>
                 <div className="mb-4">
@@ -203,8 +200,8 @@ export default function StoreRegister() {
                                 type="checkbox"
                                 id={e.id.toString()}
                                 // checked={store.innovation.includes(innovation)}
-                                onChange={() => ()=>{
-                                    store.sdgId.push(e.id)
+                                onChange={() => {
+                                    store.sdgId.push(e.id);
                                 }}
                                 className="mr-2"
                             />

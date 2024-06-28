@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
             select: { sdgId: true },
         });
 
-        const store = await prismaDb.store.create({
+        const newStore = await prismaDb.store.create({
             data: {
                 storeRole: Store.storeRole,
                 name: Store.name,
@@ -65,9 +65,28 @@ export async function POST(req: NextRequest) {
                     : undefined,
             },
         });
+
+        if (!newStore) {
+            return NextResponse.json(
+                {
+                    message: "Create store failed in try",
+                },
+                { status: 500 }
+            );
+        }
+
+        const connectedUserToStore = await prismaDb.user.update({
+            where: { userId: User.userId },
+            data: {
+                Store: {
+                    connect: { storeId: newStore.storeId },
+                },
+            },
+        });
+
         return NextResponse.json(
             {
-                data: store,
+                data: newStore,
                 message: "Create store succesful",
             },
             { status: 201 }
@@ -75,7 +94,7 @@ export async function POST(req: NextRequest) {
     } catch (error: any) {
         console.log(error);
         return NextResponse.json(
-            { message: "Create store failed" },
+            { message: "Create store failed (Unknown error)" },
             { status: 500 }
         );
         // handle
