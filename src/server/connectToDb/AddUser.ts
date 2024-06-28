@@ -23,8 +23,6 @@ export default async function OnAddUserToDb(user: any) {
             }
         })
         // console.log(response)
-
-
     } catch (error: any) {
         console.log(error);
     }
