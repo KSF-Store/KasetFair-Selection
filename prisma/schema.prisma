@@ -32,6 +32,7 @@ model Store {
   storeId         Int         @id @unique @default(autoincrement())       
   storeRole       String?
   name            String?     @unique
+  faculty         String?
   description     String?
   slogan          String?
   mainProductType String?

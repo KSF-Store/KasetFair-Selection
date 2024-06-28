@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prismaDb } from "@/lib/prismaDb";
+
 import {
     StoreEditPayload,
     StorePayload,
     UserPayload,
 } from "@/interface/payloadType";
-import { connectUserToStore } from "@/utils/api/stores/ConnectUserToStore";
-import { createConnectDisconnectObject } from "@/utils/api/stores/ConnectDisconnectObject";
+
+import { prismaDb } from "@/lib/prismaDb";
+
+import { createConnectDisconnectObject } from "@/server/connectToDb/ConnectDisconnectObject";
+import { connectUserToStore } from "@/server/connectToDb/ConnectUserToStore";
+
 import OnGetCurrentSession from "@/utils/getSession/getCurrentSession";
 
 async function createStore(User: UserPayload, Store: StorePayload) {

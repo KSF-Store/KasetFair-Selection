@@ -1,14 +1,14 @@
 
 import { useEffect, useState } from "react";
 
-import { SDGSList } from "@/utils/sdgs/sdgs";
-
-import { UserType, StoreType } from "@/interface/dbType";
+import { UserType } from "@/interface/dbType";
 import { StorePayload } from "@/interface/payloadType";
+
+import { SDGSList } from "@/utils/sdgs/sdgs";
 
 import EditUserAndStore from "@/utils/api/stores/EditUserAndStore";
 
-import axios from "axios";
+import { OnGettingStoreOfUser } from "@/server/connectToDb/GettingStoreOfUser";
 
 export default function StoreRegister() {
     const [user, setUser] = useState<UserType>({
@@ -66,12 +66,38 @@ export default function StoreRegister() {
 
     useEffect(()=>{
         const initData = async ()=>{
-            const response = await axios.get("/api/user/store/register?userId=1000")
-            const result = await response.data
-            console.log(result);
+            const response = await OnGettingStoreOfUser()
+            console.log(response)
+            if (response.Store){
+                setUser({
+                    name: response.name ?? "",
+                    nisitId: response.nisitId ?? "",
+                    faculty: response.faculty ?? "",
+                    year: response.year ?? 1,
+                    phone: response.phone ?? "",
+                })   
+                setStore({
+                    ...store,
+                    name: response.Store.name ?? "",
+                    description: response.Store.description ?? "",
+                    
+                    storeId: response.Store.storeId ?? 0,
+                    slogan: response.Store.slogan ?? "",
+                    mainProductType: response.Store.mainProductType ?? "",
+                    subProductType: response.Store.subProductType ?? "",
+                    firstPhone: response.Store.firstPhone ?? "",
+                    secondPhone: response.Store.secondPhone ?? "",
+                    thirdPhone: response.Store.thirdPhone ?? "",
+                    innovation: response.Store.innovation ?? "",
+                    // invitingNisitId: response.Store. .map(e => e.nisitId),
+                    // sdgId: response.Store.sdgId.map(e => e.sdgId),
+                })
+            } 
         }
-        // initData()
-    })
+        initData()
+
+
+    },[])
 
     if (loading) {
         return <h1>Loading...</h1>;
