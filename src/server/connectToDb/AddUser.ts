@@ -22,7 +22,7 @@ export default async function OnAddUserToDb(user: any) {
                 storeId: user.storeId || null, // Optional field
             }
         })
-        console.log(response)
+        // console.log(response)
 
 
     } catch (error: any) {

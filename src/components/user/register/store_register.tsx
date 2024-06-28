@@ -1,10 +1,15 @@
 import axios from "axios";
 import { useState } from "react";
 
+import { SDGSList } from "@/utils/sdgs/sdgs";
+
+
 import { UserType, StoreType } from "@/interface/dbType";
 import { StorePayload } from "@/interface/payloadType";
 
 import EditStore from "@/utils/api/stores/EditStore";
+
+
 
 export default function StoreRegister() {
     const [user, setUser] = useState<UserType>({
@@ -26,7 +31,7 @@ export default function StoreRegister() {
         subProductType: "",
         innovation: "",
         invitingNisitId: [],
-        sdgId: [1, 2, 3],
+        sdgId: [],
     });
 
     const [loading, setLoading] = useState(false);
@@ -188,19 +193,25 @@ export default function StoreRegister() {
                     }
                     placeholder="Sub Product Type"
                 />
-                <label className="self-start" htmlFor="innovation">
+                 <label className="self-start" htmlFor="innovation">
                     Innovation
                 </label>
-                <input
-                    className="mb-4 w-full rounded-lg border px-4 py-2"
-                    id="innovation"
-                    type="text"
-                    value={store.innovation}
-                    onChange={(e) =>
-                        setStore({ ...store, innovation: e.target.value })
-                    }
-                    placeholder="Innovation"
-                />
+                <div className="mb-4">
+                    {SDGSList.map((e) => (
+                        <div key={e.id} className="flex items-center mb-2">
+                            <input
+                                type="checkbox"
+                                id={e.id.toString()}
+                                // checked={store.innovation.includes(innovation)}
+                                onChange={() => ()=>{
+                                    store.sdgId.push()
+                                }}
+                                className="mr-2"
+                            />
+                            <label>{e.name}</label>
+                        </div>
+                    ))}
+                </div>
                 <button
                     onClick={onCreate}
                     className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300"
