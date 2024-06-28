@@ -11,7 +11,7 @@ export default function page({}: Props) {
     return (
         <section className="flex flex-col items-center justify-center min-h-screen bg-gray-100 gap-y-[2vh]">
             <UserDetail />
-            <Link href="/register">Click me!</Link>
+            <Link href="/std/form">Click me!</Link>
             <SignoutTemp />
         </section>
     );

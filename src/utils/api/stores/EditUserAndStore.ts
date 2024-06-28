@@ -2,7 +2,7 @@ import axios from "axios";
 
 import { StoreEditPayload } from "@/interface/payloadType";
 
-export default async function EditStore(props: StoreEditPayload) {
+export default async function EditUserAndStore(props: StoreEditPayload) {
     try {
         const { User, Store } = props;
         const response = await axios.post("/api/user/store/register", {
