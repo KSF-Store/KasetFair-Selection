@@ -16,6 +16,7 @@ datasource db {
 model User {
   userId         Int          @id @default(autoincrement())
   nisitId        String?      @unique
+  email          String?
   role           String?
   name           String?
   faculty        String?
@@ -52,7 +53,7 @@ model Store {
 
 
 model Sdg {
-  sdgId           Int       @id @default(autoincrement())
+  sdgId           Int       @id @unique
   name            String
   Store           Store[]   @relation(name: "StoreToSdg")
 }
