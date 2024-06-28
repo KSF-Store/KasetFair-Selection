@@ -8,7 +8,9 @@ export type StorePayload = Omit<
     sdgId: number[];
 };
 
+export type UserPayload = UserType;
+
 export interface StoreEditPayload {
-    User: UserType;
+    User: UserPayload;
     Store: StorePayload;
 }

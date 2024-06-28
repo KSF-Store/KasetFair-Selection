@@ -21,25 +21,26 @@ model User {
   name           String?
   faculty        String?
   year           Int?
+  phone          String?
   address        String?
-  phone          String?    
-  reservePhone1  String?
-  reservePhone2  String?
   storeId        Int?
   Store          Store?      @relation(fields: [storeId], references: [storeId])
   invited        Store[]     @relation(name: "InvitationStoreToUser")
 }
 
 model Store {
-  storeId        Int         @id @unique @default(autoincrement())       
-  storeRole      String?
-  name           String?     @unique
-  description    String?
-  slogan         String?
+  storeId         Int         @id @unique @default(autoincrement())       
+  storeRole       String?
+  name            String?     @unique
+  description     String?
+  slogan          String?
   mainProductType String?
-  subProductType String?
-  innovation     String?
-  status         Int?       // 0 for draft, 1 for pending ... 
+  subProductType  String?
+  innovation      String?
+  firstPhone      String?    
+  secondPhone     String?
+  thirdPhone      String?
+  status          Int?       // 0 for draft, 1 for pending ... 
 
   ownerId        Int?       @unique
   Member         User[]

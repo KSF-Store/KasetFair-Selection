@@ -7,8 +7,6 @@ export interface UserType {
     year?: number;
     address?: string;
     phone?: string;
-    reservePhone1?: string;
-    reservePhone2?: string;
     storeId?: number;
     Store?: StoreType;
     invited?: StoreType[];
@@ -23,6 +21,9 @@ export interface StoreType {
     mainProductType: string;
     subProductType?: string;
     innovation?: string;
+    primaryPhone?: string;
+    secondPhone?: string;
+    thirdPhone?: string;
     status?: number; // 0 for draft, 1 for pending ...
     ownerId?: number;
     Member?: UserType[];

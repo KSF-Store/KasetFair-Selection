@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prismaDb } from "@/lib/prismaDb";
-
 import { StoreEditPayload } from "@/interface/payloadType";
+import { connectUserToStore } from "@/utils/api/stores/ConnectUserToStore";
 
 export async function POST(req: NextRequest) {
     try {
@@ -44,7 +44,6 @@ export async function POST(req: NextRequest) {
 
         const newStore = await prismaDb.store.create({
             data: {
-                storeId: User.userId,
                 storeRole: Store.storeRole,
                 name: Store.name,
                 description: Store.description,
@@ -76,18 +75,13 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const connectedUserToStore = await prismaDb.user.update({
-            where: { userId: User.userId },
-            data: {
-                Store: {
-                    connect: { storeId: newStore.storeId },
-                },
-            },
-        });
-
+        const updatedUser = await connectUserToStore(
+            User.userId,
+            newStore.storeId
+        );
         return NextResponse.json(
             {
-                data: newStore,
+                data: { updatedUser, newStore },
                 message: "Create store succesful",
             },
             { status: 201 }
