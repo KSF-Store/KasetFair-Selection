@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { StoreType } from '@/interface/dbType';
-import Link from 'next/link';
 import axios from 'axios';
 import CategoryConfig from './categoryConfig';
 import SdgConfig from './sdgConfig';
