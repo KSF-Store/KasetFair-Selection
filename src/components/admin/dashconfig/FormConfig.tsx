@@ -13,7 +13,7 @@ type StoresRenderType = {
   isError: boolean
 }
 
-export default function AdminDashboard() {
+export default function AdminDashboardFormConfig() {
   const [storesRender, onSetStoreRender] = useState<StoresRenderType>({
     stores: [],
     isLoading: false,
