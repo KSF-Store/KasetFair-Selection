@@ -1,9 +1,9 @@
 import { prismaDb } from "@/lib/prismaDb";
 
-export async function connectUserToStore(userId: number, storeId: number) {
+export async function connectUserToStore(nisitId: string, storeId: number) {
     try {
         const existingUser = await prismaDb.user.findUnique({
-            where: { userId },
+            where: { nisitId },
             include: { Store: true },
         });
 
@@ -15,7 +15,7 @@ export async function connectUserToStore(userId: number, storeId: number) {
         }
 
         const updatedUser = await prismaDb.user.update({
-            where: { userId },
+            where: { nisitId },
             data: { Store: { connect: { storeId } }},
         });
         return updatedUser;
