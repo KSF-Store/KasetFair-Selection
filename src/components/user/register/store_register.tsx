@@ -1,14 +1,19 @@
-
 import { useEffect, useState } from "react";
 
 import { UserType } from "@/interface/dbType";
-import { StorePayload } from "@/interface/payloadType";
+import { SdgPayload, StorePayload } from "@/interface/payloadType";
 
 import { SDGSList } from "@/utils/sdgs/sdgs";
 
 import EditUserAndStore from "@/utils/api/stores/EditUserAndStore";
 
 import { OnGettingStoreOfUser } from "@/server/connectToDb/GettingStoreOfUser";
+import axios, { AxiosResponse } from "axios";
+import {
+    GetAllSdgsResponse,
+    GetUserWithStoreResponse,
+} from "@/interface/responseType";
+import OnGetCurrentSession from "@/utils/getSession/getCurrentSession";
 
 export default function StoreRegister() {
     const [user, setUser] = useState<UserType>({
@@ -17,7 +22,7 @@ export default function StoreRegister() {
         faculty: "",
         year: 0,
         phone: "",
-    })
+    });
 
     const [store, setStore] = useState<StorePayload>({
         name: "",
@@ -31,12 +36,12 @@ export default function StoreRegister() {
         innovation: "",
         invitingNisitId: [],
         sdgId: [],
-    })
+    });
 
-    const handleCheckboxChange = (id : number) => {
-        setStore(prevStore => {
+    const handleCheckboxChange = (id: number) => {
+        setStore((prevStore) => {
             const newSdgId = prevStore.sdgId.includes(id)
-                ? prevStore.sdgId.filter(sdgId => sdgId !== id)
+                ? prevStore.sdgId.filter((sdgId) => sdgId !== id)
                 : [...prevStore.sdgId, id];
             return { ...prevStore, sdgId: newSdgId };
         });
@@ -62,42 +67,69 @@ export default function StoreRegister() {
         }
         console.log("user : ", user);
         console.log("store : ", store);
-    }
+    };
 
-    useEffect(()=>{
-        const initData = async ()=>{
-            const response = await OnGettingStoreOfUser()
-            console.log(response)
-            if (response.Store){
-                setUser({
-                    name: response.name ?? "",
-                    nisitId: response.nisitId ?? "",
-                    faculty: response.faculty ?? "",
-                    year: response.year ?? 1,
-                    phone: response.phone ?? "",
-                })   
-                setStore({
-                    ...store,
-                    name: response.Store.name ?? "",
-                    description: response.Store.description ?? "",
-                    
-                    storeId: response.Store.storeId ?? 0,
-                    slogan: response.Store.slogan ?? "",
-                    mainProductType: response.Store.mainProductType ?? "",
-                    subProductType: response.Store.subProductType ?? "",
-                    firstPhone: response.Store.firstPhone ?? "",
-                    secondPhone: response.Store.secondPhone ?? "",
-                    thirdPhone: response.Store.thirdPhone ?? "",
-                    innovation: response.Store.innovation ?? "",
-                    // invitingNisitId: response.Store. .map(e => e.nisitId),
-                    // sdgId: response.Store.sdgId.map(e => e.sdgId),
-                })
-            } 
-        }
-        initData()
+    const [sdgsList, setSdgsList] = useState<SdgPayload[]>();
+    useEffect(() => {
+        const getSdgsList = async () => {
+            const response: AxiosResponse<GetAllSdgsResponse> = await axios.get(
+                "/api/common/sdgs"
+            );
+            if (response.status == 200) {
+                setSdgsList(response.data.data);
+            }
+        };
+        getSdgsList();
+    }, []);
 
+    useEffect(() => {
+        const retriveData = async () => {
+            const email = (await OnGetCurrentSession()).user.email!;
+            console.log(email);
+            try {
+                const response: AxiosResponse<GetUserWithStoreResponse> =
+                    await axios.get(`/api/user/store/register`, {
+                        params: { email },
+                    });
+                console.log(response);
+                const retriveUser = response.data.data.User;
+                const retriveStore = response.data.data.Store;
+                console.log(retriveUser, retriveStore);
+                if (retriveUser) {
+                    setUser({
+                        name: retriveUser.name ?? "",
+                        nisitId: retriveUser.nisitId ?? "",
+                        faculty: retriveUser.faculty ?? "",
+                        year: retriveUser.year ?? 1,
+                        phone: retriveUser.phone ?? "",
+                    });
+                }
+                if (retriveStore) {
+                    setStore({
+                        ...store,
+                        name: retriveStore.name ?? "",
+                        description: retriveStore.description ?? "",
 
-    },[])
+                        storeId: retriveStore.storeId ?? 0,
+                        slogan: retriveStore.slogan ?? "",
+                        mainProductType: retriveStore.mainProductType ?? "",
+                        subProductType: retriveStore.subProductType ?? "",
+                        firstPhone: retriveStore.firstPhone ?? "",
+                        secondPhone: retriveStore.secondPhone ?? "",
+                        thirdPhone: retriveStore.thirdPhone ?? "",
+                        innovation: retriveStore.innovation ?? "",
+                        invitingNisitId: retriveStore.inviting.map(
+                            ({ nisitId }) => nisitId
+                        ),
+                        sdgId: retriveStore.Sdg.map(({ sdgId }) => sdgId),
+                    });
+                }
+            } catch (error: any) {
+                console.log(error);
+            }
+        };
+        retriveData();
+    }, []);
 
     if (loading) {
         return <h1>Loading...</h1>;
@@ -245,18 +277,26 @@ export default function StoreRegister() {
                     Innovation
                 </label>
                 <div className="mb-4">
-                    {SDGSList.map(e => (
-                        <div key={e.id} className="flex items-center mb-2">
-                            <input
-                                type="checkbox"
-                                id={e.id.toString()}
-                                checked={store.sdgId.includes(e.id)}
-                                onChange={() => handleCheckboxChange(e.id)}
-                                className="mr-2"
-                            />
-                            <label htmlFor={e.id.toString()}>{e.name}</label>
-                        </div>
-                    ))}
+                    {sdgsList &&
+                        sdgsList.map((e) => (
+                            <div
+                                key={e.sdgId}
+                                className="flex items-center mb-2"
+                            >
+                                <input
+                                    type="checkbox"
+                                    id={e.sdgId.toString()}
+                                    checked={store.sdgId.includes(e.sdgId)}
+                                    onChange={() =>
+                                        handleCheckboxChange(e.sdgId)
+                                    }
+                                    className="mr-2"
+                                />
+                                <label htmlFor={e.sdgId.toString()}>
+                                    {e.name}
+                                </label>
+                            </div>
+                        ))}
                 </div>
                 <button
                     onClick={onCreate}
