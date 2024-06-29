@@ -50,14 +50,20 @@ model Store {
   boothId        Int?       @unique
   Booth          Booth?     @relation(fields: [boothId], references: [id])   
   Sdg            Sdg[]      @relation(name: "StoreToSdg")
+  Category       Category[] @relation(name: "StoreToCategory")
   inviting       User[]     @relation(name: "InvitationStoreToUser")
 }
-
 
 model Sdg {
   sdgId           Int       @id @unique
   name            String
   Store           Store[]   @relation(name: "StoreToSdg")
+}
+
+model Category {
+  categoryId      Int       @id @unique
+  name            String
+  Store           Store[]   @relation(name: "StoreToCategory")
 }
 
 model Booth { 
