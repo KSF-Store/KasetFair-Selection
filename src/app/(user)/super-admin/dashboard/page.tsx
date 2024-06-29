@@ -5,7 +5,7 @@ type Props = {}
 export default function page({}: Props) {
   return (
     <section>
-      <div>page</div>
+        <h1>Dashboard</h1>
     </section>
   )
 }
