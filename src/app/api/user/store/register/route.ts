@@ -63,8 +63,8 @@ async function createStore(User: UserPayload, Store: StorePayload) {
     if (!newStore) {
         throw new Error("Store creation failed");
     }
-    
-    await connectUserToStore(Number(User.userId), newStore.storeId);
+
+    await connectUserToStore(User.nisitId, newStore.storeId);
     return { payload: newStore, message: "Store create succesful" };
 }
 
@@ -149,7 +149,7 @@ async function updateStore(User: UserPayload, newStoreProps: StorePayload) {
 
 export async function POST(req: NextRequest) {
     try {
-        const session = await  OnGetCurrentSession()
+        const session = await OnGetCurrentSession();
 
         const payload: StoreEditPayload = await req.json();
         const Store = payload.Store;
@@ -157,11 +157,11 @@ export async function POST(req: NextRequest) {
         // console.log("In API", payload);
 
         const existdUser = await prismaDb.user.findUnique({
-            where: { email : session.user?.email?.toString() },
+            where: { email: session.user?.email?.toString() },
             include: { Store: true },
         });
-    
-        console.log(existdUser)
+
+        console.log(existdUser);
         // const existdUser = await prismaDb.user.findUnique({
         //     where: { userId: User.userId },
         //     select: { storeId: true },
@@ -176,7 +176,7 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        let existdStore ;
+        let existdStore;
         if (existdUser.storeId) {
             existdStore = await prismaDb.store.findUnique({
                 where: { storeId: existdUser.storeId },
@@ -188,7 +188,7 @@ export async function POST(req: NextRequest) {
         let response;
         if (!existdUser.storeId) {
             console.log("Do Create");
-            
+
             response = await createStore(User, Store);
         } else if (User.userId === existdStore?.ownerId) {
             console.log("Do Update");
@@ -217,18 +217,24 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
     try {
-        const userIdString = req.nextUrl.searchParams.get("userId") as string;
-        const userId = Number(userIdString);
-
-        if (isNaN(userId)) {
+        const searchParams = req.nextUrl.searchParams;
+        const email = searchParams.get("email");
+        console.log('In API get')
+        if (!email) {
             return NextResponse.json(
-                { error: "Invalid userId" },
+                { error: "Invalid email" },
                 { status: 400 }
             );
         }
+        // if (isNaN(userId)) {
+        //     return NextResponse.json(
+        //         { error: "Invalid userId" },
+        //         { status: 400 }
+        //     );
+        // }
 
         const user = await prismaDb.user.findUnique({
-            where: { userId },
+            where: { email },
             include: { Store: true },
         });
         if (!user) {
@@ -238,15 +244,18 @@ export async function GET(req: NextRequest) {
             );
         }
 
-        const store = user?.Store;
-        if (!store) {
-            return NextResponse.json(
-                { message: "User is not member of any store" },
-                { status: 300 }
-            );
+        let allStoreProps;
+        if (user.Store) {
+            allStoreProps = await prismaDb.store.findUnique({
+                where: { storeId: user.Store.storeId },
+                include: { inviting: true, Member: true, Sdg: true },
+            });
         }
+
+        const { Store, ...userWithoutStore } = user;
+        const responseData = { User: userWithoutStore, Store: allStoreProps };
         return NextResponse.json(
-            { payload: store, message: "Store retrived succesful" },
+            { data: responseData, message: "Store retrived succesful" },
             { status: 200 }
         );
     } catch (error: any) {
@@ -257,69 +266,3 @@ export async function GET(req: NextRequest) {
         );
     }
 }
-
-// export async function PUT(req: NextRequest) {
-//     try {
-//         const {
-//             userId,
-//             storeRole,
-//             name,
-//             mainProductType,
-//             subProductType,
-//             innovation,
-//             ownerId,
-//         } = await req.json();
-
-//         if (userId != ownerId) {
-//             return NextResponse.json(
-//                 { message: "No access to update store" },
-//                 { status: 400 }
-//             );
-//         }
-
-//         const user = await prismaDb.user.findUnique({
-//             where: { userId },
-//             include: { Store: true },
-//         });
-//         if (!user) {
-//             return NextResponse.json(
-//                 { message: "User not existd" },
-//                 { status: 404 }
-//             );
-//         }
-
-//         const store = user.Store;
-//         if (!store) {
-//             return NextResponse.json(
-//                 { message: "Store not existd" },
-//                 { status: 404 }
-//             );
-//         }
-
-//         const updatedStore = await prismaDb.store.update({
-//             where: {
-//                 storeId: store.storeId,
-//             },
-//             data: {
-//                 storeRole: storeRole || store.storeRole,
-//                 name: name || store.name,
-//                 mainProductType: mainProductType || store.mainProductType,
-//                 subProductType: subProductType || store.subProductType,
-//                 innovation: innovation || store.innovation,
-//                 ownerId: ownerId || store.ownerId,
-//             },
-//         });
-//         return NextResponse.json(
-//             { data: updatedStore, message: "Update store succesful" },
-//             { status: 200 }
-//         );
-//     } catch (error: any) {
-//         return NextResponse.json(
-//             { message: "Update store failed" },
-//             { status: 500 }
-//         );
-//         // handle
-//         // .
-//         // .
-//     }
-// }
