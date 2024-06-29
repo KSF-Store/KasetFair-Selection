@@ -15,3 +15,8 @@ export interface StoreEditPayload {
     User: UserPayload;
     Store: StorePayload;
 }
+
+export interface SdgPayload {
+    sdgId: number;
+    name: string;
+}
