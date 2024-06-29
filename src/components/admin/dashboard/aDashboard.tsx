@@ -19,10 +19,11 @@ export default function AdminDashboard() {
 
   const onGetStores = async () => {
     try {
-      const response = await fetch("/api/stores/route", {
+      const response = await fetch("/api/admin/stores", {
         method: "GET"
       });
       const data = await response.json();
+      console.log(data)
       onSetStoreRender({ ...storesRender, stores: data.data, isLoading: false });
     } catch (error: any) {
       console.log(error);
