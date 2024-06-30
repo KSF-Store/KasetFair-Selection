@@ -1,24 +1,14 @@
 import { useEffect, useState } from "react";
-
+import axios, { AxiosResponse } from "axios";
 import { UserType } from "@/interface/dbType";
 import { SdgPayload, StorePayload } from "@/interface/payloadType";
-
-import { SDGSList } from "@/utils/sdgs/sdgs";
-
-import EditUserAndStore from "@/utils/api/stores/EditUserAndStore";
-
-import { OnGettingStoreOfUser } from "@/server/connectToDb/GettingStoreOfUser";
-import axios, { AxiosResponse } from "axios";
-import {
-    GetAllSdgsResponse,
-    GetUserWithStoreResponse,
-} from "@/interface/responseType";
-import OnGetCurrentSession from "@/utils/getSession/getCurrentSession";
+import { getUserAndStore } from "@/server/connectToDb/GettingStoreOfUser";
+import { GetAllSdgsResponse } from "@/interface/responseType";
+import { createEditStore } from "@/server/connectToDb/CreateAndEditStore";
 
 export default function StoreRegister() {
     const [user, setUser] = useState<UserType>({
         name: "",
-        nisitId: "",
         faculty: "",
         year: 0,
         phone: "",
@@ -40,9 +30,10 @@ export default function StoreRegister() {
 
     const handleCheckboxChange = (id: number) => {
         setStore((prevStore) => {
-            const newSdgId = prevStore.sdgId.includes(id)
-                ? prevStore.sdgId.filter((sdgId) => sdgId !== id)
-                : [...prevStore.sdgId, id];
+            const newSdgId =
+                prevStore.sdgId && prevStore.sdgId.includes(id)
+                    ? prevStore.sdgId.filter((sdgId) => sdgId !== id)
+                    : [...prevStore.sdgId, id];
             return { ...prevStore, sdgId: newSdgId };
         });
     };
@@ -54,7 +45,7 @@ export default function StoreRegister() {
             // console.log(process.env.NEXT_PUBLIC_TEST_USER_ID);
             // console.log(Number(process.env.NEXT_PUBLIC_TEST_USER_ID));
             setLoading(true);
-            const response = await EditUserAndStore({
+            const response = await createEditStore({
                 User: user,
                 Store: store,
             });
@@ -84,21 +75,16 @@ export default function StoreRegister() {
 
     useEffect(() => {
         const retriveData = async () => {
-            const email = (await OnGetCurrentSession()).user.email!;
-            console.log(email);
             try {
-                const response: AxiosResponse<GetUserWithStoreResponse> =
-                    await axios.get(`/api/user/store/register`, {
-                        params: { email },
-                    });
+                const response = await getUserAndStore();
                 console.log(response);
-                const retriveUser = response.data.data.User;
-                const retriveStore = response.data.data.Store;
+                const retriveUser = response.data.User;
+                const retriveStore = response.data.Store;
                 console.log(retriveUser, retriveStore);
                 if (retriveUser) {
                     setUser({
                         name: retriveUser.name ?? "",
-                        nisitId: retriveUser.nisitId ?? "",
+                        nisitId: retriveUser.nisitId ?? null,
                         faculty: retriveUser.faculty ?? "",
                         year: retriveUser.year ?? 1,
                         phone: retriveUser.phone ?? "",
@@ -118,9 +104,12 @@ export default function StoreRegister() {
                         secondPhone: retriveStore.secondPhone ?? "",
                         thirdPhone: retriveStore.thirdPhone ?? "",
                         innovation: retriveStore.innovation ?? "",
-                        invitingNisitId: retriveStore.inviting.map(
-                            ({ nisitId }) => nisitId
-                        ),
+                        invitingNisitId: retriveStore.inviting
+                            .map(({ nisitId }) => nisitId)
+                            .filter(
+                                (nisitId): nisitId is string =>
+                                    nisitId !== null && nisitId !== undefined
+                            ),
                         sdgId: retriveStore.Sdg.map(({ sdgId }) => sdgId),
                     });
                 }
@@ -147,7 +136,7 @@ export default function StoreRegister() {
                     className="mb-2 w-full rounded-lg border px-4 py-2"
                     id="name"
                     type="text"
-                    value={user.name}
+                    value={user.name ?? ""}
                     onChange={(e) => setUser({ ...user, name: e.target.value })}
                     placeholder="Name"
                 />
@@ -158,7 +147,7 @@ export default function StoreRegister() {
                     className="mb-2 w-full rounded-lg border px-4 py-2"
                     id="nisitId"
                     type="text"
-                    value={user.nisitId}
+                    value={user.nisitId ?? ""}
                     onChange={(e) =>
                         setUser({ ...user, nisitId: e.target.value })
                     }
@@ -171,7 +160,7 @@ export default function StoreRegister() {
                     className="mb-2 w-full rounded-lg border px-4 py-2"
                     id="faculty"
                     type="text"
-                    value={user.faculty}
+                    value={user.faculty ?? ""}
                     onChange={(e) =>
                         setUser({ ...user, faculty: e.target.value })
                     }
@@ -183,7 +172,7 @@ export default function StoreRegister() {
                 <select
                     className="mb-2 w-full rounded-lg border px-4 py-2"
                     id="year"
-                    value={user.year}
+                    value={user.year ?? ""}
                     onChange={(e) =>
                         setUser({ ...user, year: Number(e.target.value) })
                     }
@@ -201,7 +190,7 @@ export default function StoreRegister() {
                     className="mb-2 w-full rounded-lg border px-4 py-2"
                     id="phone"
                     type="text"
-                    value={store.firstPhone}
+                    value={store.firstPhone ?? ""}
                     onChange={(e) =>
                         setStore({ ...store, firstPhone: e.target.value })
                     }
@@ -214,7 +203,7 @@ export default function StoreRegister() {
                     className="mb-2 w-full rounded-lg border px-4 py-2"
                     id="reservePhone1"
                     type="text"
-                    value={store.secondPhone}
+                    value={store.secondPhone ?? ""}
                     onChange={(e) =>
                         setStore({ ...store, secondPhone: e.target.value })
                     }
@@ -227,7 +216,7 @@ export default function StoreRegister() {
                     className="mb-2 w-full rounded-lg border px-4 py-2"
                     id="reservePhone2"
                     type="text"
-                    value={store.thirdPhone}
+                    value={store.thirdPhone ?? ""}
                     onChange={(e) =>
                         setStore({ ...store, thirdPhone: e.target.value })
                     }
@@ -241,7 +230,7 @@ export default function StoreRegister() {
                     className="mb-2 w-full rounded-lg border px-4 py-2"
                     id="storeName"
                     type="text"
-                    value={store.name}
+                    value={store.name ?? ""}
                     onChange={(e) =>
                         setStore({ ...store, name: e.target.value })
                     }
@@ -254,7 +243,7 @@ export default function StoreRegister() {
                     className="mb-2 w-full rounded-lg border px-4 py-2"
                     id="mainProductType"
                     type="text"
-                    value={store.mainProductType}
+                    value={store.mainProductType ?? ""}
                     onChange={(e) =>
                         setStore({ ...store, mainProductType: e.target.value })
                     }
@@ -267,7 +256,7 @@ export default function StoreRegister() {
                     className="mb-2 w-full rounded-lg border px-4 py-2"
                     id="subProductType"
                     type="text"
-                    value={store.subProductType}
+                    value={store.subProductType ?? ""}
                     onChange={(e) =>
                         setStore({ ...store, subProductType: e.target.value })
                     }
