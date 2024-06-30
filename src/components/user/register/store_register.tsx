@@ -16,7 +16,6 @@ import { SdgPayload, StorePayload } from "@/interface/payloadType";
 export default function StoreRegister() {
     const [user, setUser] = useState<UserType>({
         name: "",
-        nisitId: "",
         faculty: "",
         year: 0,
         phone: "",
@@ -38,9 +37,10 @@ export default function StoreRegister() {
 
     const handleCheckboxChange = (id: number) => {
         setStore((prevStore) => {
-            const newSdgId = prevStore.sdgId.includes(id)
-                ? prevStore.sdgId.filter((sdgId) => sdgId !== id)
-                : [...prevStore.sdgId, id];
+            const newSdgId =
+                prevStore.sdgId && prevStore.sdgId.includes(id)
+                    ? prevStore.sdgId.filter((sdgId) => sdgId !== id)
+                    : [...prevStore.sdgId, id];
             return { ...prevStore, sdgId: newSdgId };
         });
     };
@@ -52,7 +52,7 @@ export default function StoreRegister() {
             // console.log(process.env.NEXT_PUBLIC_TEST_USER_ID);
             // console.log(Number(process.env.NEXT_PUBLIC_TEST_USER_ID));
             setLoading(true);
-            const response = await EditUserAndStore({
+            const response = await createEditStore({
                 User: user,
                 Store: store,
             });
@@ -82,21 +82,16 @@ export default function StoreRegister() {
 
     useEffect(() => {
         const retriveData = async () => {
-            const email = (await OnGetCurrentSession()).user.email!;
-            console.log(email);
             try {
-                const response: AxiosResponse<GetUserWithStoreResponse> =
-                    await axios.get(`/api/user/store/register`, {
-                        params: { email },
-                    });
+                const response = await getUserAndStore();
                 console.log(response);
-                const retriveUser = response.data.data.User;
-                const retriveStore = response.data.data.Store;
+                const retriveUser = response.data.User;
+                const retriveStore = response.data.Store;
                 console.log(retriveUser, retriveStore);
                 if (retriveUser) {
                     setUser({
                         name: retriveUser.name ?? "",
-                        nisitId: retriveUser.nisitId ?? "",
+                        nisitId: retriveUser.nisitId ?? null,
                         faculty: retriveUser.faculty ?? "",
                         year: retriveUser.year ?? 1,
                         phone: retriveUser.phone ?? "",
@@ -116,9 +111,12 @@ export default function StoreRegister() {
                         secondPhone: retriveStore.secondPhone ?? "",
                         thirdPhone: retriveStore.thirdPhone ?? "",
                         innovation: retriveStore.innovation ?? "",
-                        invitingNisitId: retriveStore.inviting.map(
-                            ({ nisitId }) => nisitId
-                        ),
+                        invitingNisitId: retriveStore.inviting
+                            .map(({ nisitId }) => nisitId)
+                            .filter(
+                                (nisitId): nisitId is string =>
+                                    nisitId !== null && nisitId !== undefined
+                            ),
                         sdgId: retriveStore.Sdg.map(({ sdgId }) => sdgId),
                     });
                 }
