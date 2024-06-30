@@ -3,11 +3,8 @@ import { useEffect, useState } from "react";
 import { UserType } from "@/interface/dbType";
 import { SdgPayload, StorePayload } from "@/interface/payloadType";
 
-import { SDGSList } from "@/utils/sdgs/sdgs";
-
 import EditUserAndStore from "@/utils/api/stores/EditUserAndStore";
 
-import { OnGettingStoreOfUser } from "@/server/connectToDb/GettingStoreOfUser";
 import axios, { AxiosResponse } from "axios";
 import {
     GetAllSdgsResponse,
