@@ -35,35 +35,35 @@ export const OnGettingStoreOfUser = async () => {
     }
 };
 
-// export async function getUserAndStore(): Promise<GetUserWithStoreResponse> {
-//     try {
-//         const session = await OnGetCurrentSession();
-//         if (!session || !session.user || !session.user.email) {
-//             throw new Error("Unauthorize");
-//         }
+export async function getUserAndStore(): Promise<GetUserWithStoreResponse> {
+    try {
+        const session = await OnGetCurrentSession();
+        if (!session || !session.user || !session.user.email) {
+            throw new Error("Unauthorize");
+        }
 
-//         const email = session.user.email;
-//         const user = await prismaDb.user.findUnique({
-//             where: { email },
-//             include: { Store: true },
-//         });
-//         if (!user) {
-//             throw new Error("User not found");
-//         }
+        const email = session.user.email;
+        const user = await prismaDb.user.findUnique({
+            where: { email },
+            include: { Store: true },
+        });
+        if (!user) {
+            throw new Error("User not found");
+        }
 
-//         let allStoreProps;
-//         if (user.Store) {
-//             allStoreProps = await prismaDb.store.findUnique({
-//                 where: { storeId: user.Store.storeId },
-//                 include: { inviting: true, Member: true, Sdg: true },
-//             });
-//         }
+        let allStoreProps;
+        if (user.Store) {
+            allStoreProps = await prismaDb.store.findUnique({
+                where: { storeId: user.Store.storeId },
+                include: { inviting: true, Member: true, Sdg: true },
+            });
+        }
 
-//         const { Store, ...userWithoutStore } = user;
-//         const responseData = { User: userWithoutStore, Store: allStoreProps };
-//         return { data : responseData, message: "Store retrived succesful" };
-//     } catch (error: any) {
-//         console.log(error);
-//         throw new Error("Get store failed (Unknown error)", error.message);
-//     }
-// }
+        const { Store, ...userWithoutStore } = user;
+        const responseData = { User: userWithoutStore, Store: allStoreProps };
+        return { data : responseData, message: "Store retrived succesful" };
+    } catch (error: any) {
+        console.log(error);
+        throw new Error("Get store failed (Unknown error)", error.message);
+    }
+}
