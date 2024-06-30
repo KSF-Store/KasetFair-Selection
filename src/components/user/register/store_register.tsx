@@ -1,9 +1,4 @@
 import { useEffect, useState } from "react";
-
-import { Sdg, UserType, StoreType } from "@/interface/dbType";
-import { SdgPayload, StorePayload, UserPayload } from "@/interface/payloadType";
-import { defaultResponse } from "@/interface/responseType";
-import { getUserAndStore } from "@/server/connectToDb/GettingStoreOfUser";
 import {
     GetAllSdgsResponse,
     GetUserWithStoreResponse,
@@ -11,6 +6,11 @@ import {
 import { createEditStore } from "@/server/connectToDb/CreateAndEditStore";
 import { getAllSdgs } from "@/server/connectToDb/Sdg";
 import { useForm, SubmitHandler } from "react-hook-form";
+=======
+import { UserType } from "@/interface/dbType";
+import { SdgPayload, StorePayload } from "@/interface/payloadType";
+
+
 
 type Inputs = {
     User: Omit<UserPayload, "Store">;
@@ -152,6 +152,7 @@ export default function StoreRegister() {
     };
 
     return (
+
         <form
             onSubmit={handleSubmit(onSubmit)}
             className="max-w-md mx-auto bg-green-100 shadow-md rounded px-8 pt-6 pb-8 mb-4"
@@ -353,8 +354,10 @@ export default function StoreRegister() {
                     Create/Edit
                 </button>
             </div>
+
         </form>
     );
+
 }
 //     const [user, setUser] = useState<UserType>({
 //         name: "",
