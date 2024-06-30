@@ -1,19 +1,20 @@
-import { NextRequest, NextResponse } from "next/server";
+"use server";
 
 import {
-    StoreEditPayload,
+    StoreCreateEditPayload,
     StorePayload,
     UserPayload,
 } from "@/interface/payloadType";
-
+import { CreateEditStoreResponse } from "@/interface/responseType";
 import { prismaDb } from "@/lib/prismaDb";
-
 import { createConnectDisconnectObject } from "@/server/connectToDb/ConnectDisconnectObject";
 import { connectUserToStore } from "@/server/connectToDb/ConnectUserToStore";
-
 import OnGetCurrentSession from "@/utils/getSession/getCurrentSession";
 
-async function createStore(User: UserPayload, Store: StorePayload) {
+async function createStore(
+    User: UserPayload,
+    Store: StorePayload
+): Promise<CreateEditStoreResponse> {
     // console.log("In API user  creating : ", User);
 
     const validInvitingUsers = await prismaDb.user.findMany({
@@ -64,11 +65,14 @@ async function createStore(User: UserPayload, Store: StorePayload) {
         throw new Error("Store creation failed");
     }
 
-    await connectUserToStore(User.nisitId, newStore.storeId);
-    return { payload: newStore, message: "Store create succesful" };
+    await connectUserToStore(User.nisitId!, newStore.storeId);
+    return { data: newStore, message: "Store create succesful" };
 }
 
-async function updateStore(User: UserPayload, newStoreProps: StorePayload) {
+async function updateStore(
+    User: UserPayload,
+    newStoreProps: StorePayload
+): Promise<CreateEditStoreResponse> {
     // console.log("In API user  update : ", User);
 
     const storeId = newStoreProps.storeId;
@@ -121,7 +125,7 @@ async function updateStore(User: UserPayload, newStoreProps: StorePayload) {
     });
 
     const updatedStore = await prismaDb.store.update({
-        where: { storeId: newStoreProps.storeId },
+        where: { storeId },
         data: {
             storeRole: newStoreProps.storeRole,
             name: newStoreProps.name,
@@ -144,20 +148,25 @@ async function updateStore(User: UserPayload, newStoreProps: StorePayload) {
         throw new Error("Store update failed");
     }
 
-    return { payload: updatedStore, message: "Store update succesful" };
+    return { data: updatedStore, message: "Store update succesful" };
 }
 
-export async function POST(req: NextRequest) {
+export async function createEditStore(
+    payload: StoreCreateEditPayload
+): Promise<CreateEditStoreResponse> {
     try {
         const session = await OnGetCurrentSession();
-
-        const payload: StoreEditPayload = await req.json();
         const Store = payload.Store;
         const User = payload.User;
         // console.log("In API", payload);
 
+        if (!session || !session.user || !session.user.email) {
+            throw new Error("Unauthorize");
+        }
+
+        const email = session.user.email;
         const existdUser = await prismaDb.user.findUnique({
-            where: { email: session.user?.email?.toString() },
+            where: { email },
             include: { Store: true },
         });
 
@@ -170,10 +179,7 @@ export async function POST(req: NextRequest) {
         // futre handle
         // console.log(existdUser);
         if (!existdUser) {
-            return NextResponse.json(
-                { message: "User not found" },
-                { status: 404 }
-            );
+            throw new Error("User not found");
         }
 
         let existdStore;
@@ -200,69 +206,11 @@ export async function POST(req: NextRequest) {
             });
         } else {
             console.log("Do Nothing");
-            return NextResponse.json(
-                { message: "User is not authorized to perform this action" },
-                { status: 403 }
-            );
+            throw new Error("User is not authorized to perform this action");
         }
-        return NextResponse.json({ ...response }, { status: 200 });
+        return response;
     } catch (error: any) {
         console.log(error);
-        return NextResponse.json(
-            { message: "Create store failed (Unknown error)" },
-            { status: 500 }
-        );
-    }
-}
-
-export async function GET(req: NextRequest) {
-    try {
-        const searchParams = req.nextUrl.searchParams;
-        const email = searchParams.get("email");
-        console.log('In API get')
-        if (!email) {
-            return NextResponse.json(
-                { error: "Invalid email" },
-                { status: 400 }
-            );
-        }
-        // if (isNaN(userId)) {
-        //     return NextResponse.json(
-        //         { error: "Invalid userId" },
-        //         { status: 400 }
-        //     );
-        // }
-
-        const user = await prismaDb.user.findUnique({
-            where: { email },
-            include: { Store: true },
-        });
-        if (!user) {
-            return NextResponse.json(
-                { message: "User not found" },
-                { status: 404 }
-            );
-        }
-
-        let allStoreProps;
-        if (user.Store) {
-            allStoreProps = await prismaDb.store.findUnique({
-                where: { storeId: user.Store.storeId },
-                include: { inviting: true, Member: true, Sdg: true },
-            });
-        }
-
-        const { Store, ...userWithoutStore } = user;
-        const responseData = { User: userWithoutStore, Store: allStoreProps };
-        return NextResponse.json(
-            { data: responseData, message: "Store retrived succesful" },
-            { status: 200 }
-        );
-    } catch (error: any) {
-        console.log(error);
-        return NextResponse.json(
-            { message: "Get store failed (Unknown error)" },
-            { status: 500 }
-        );
+        throw new Error("Create store failed (Unknown error)", error.message);
     }
 }
