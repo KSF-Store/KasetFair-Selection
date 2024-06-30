@@ -32,6 +32,7 @@ export default function StoreRegister() {
     const {
         register,
         handleSubmit,
+        setValue,
         watch,
         formState: { errors },
     } = useForm<Inputs>();
@@ -39,6 +40,7 @@ export default function StoreRegister() {
     const [loading, setLoading] = useState<boolean>(false);
     const [sdgsList, setSdgsList] = useState<Sdg[]>();
     const [initData, setInitData] = useState<InitData>();
+    const [inputSdgsList, setInputSdgsList] = useState<number[]>();
 
     useEffect(() => {
         const getSdgsList = async () => {
@@ -56,7 +58,10 @@ export default function StoreRegister() {
                 const response = await getUserAndStore();
                 const retrievedUser = response.data.User;
                 const retrievedStore = response.data.Store;
-
+                console.log(
+                    retrievedUser.year,
+                    typeof retrievedUser.year === "number"
+                );
                 if (retrievedUser) {
                     const updatedData: InitData = {
                         User: retrievedUser,
@@ -70,6 +75,15 @@ export default function StoreRegister() {
                             : null,
                     };
                     setInitData(updatedData);
+                    setValue("User", retrievedUser);
+                    if (retrievedStore) {
+                        const { Sdg, Member, inviting, ...filteredStore } =
+                            retrievedStore;
+                        setValue("Store", filteredStore);
+                    }
+                    setInputSdgsList(
+                        updatedData.Store?.Sdg.map(({ sdgId }) => sdgId)
+                    );
                 }
             } catch (error: any) {
                 console.log(error);
@@ -77,14 +91,13 @@ export default function StoreRegister() {
         };
         retriveData();
     }, []);
-    console.log(watch("Store.sdgId"));
-    console.log(watch("Store.firstPhone"));
+
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
         try {
             setLoading(true);
             const response = await createEditStore({
                 User: data.User,
-                Store: data.Store,
+                Store: { ...data.Store, sdgId: inputSdgsList },
             });
             console.log(response);
         } catch (error) {
@@ -94,48 +107,34 @@ export default function StoreRegister() {
         }
     };
 
-    const handleCheckboxChange = (sdgId: number) => {
+    const handleSdgsCheckboxChange = (incomingSdgId: number) => {
+        console.log(sdgsList);
+        console.log(inputSdgsList);
         const isChecked =
-            (initData?.Store?.Sdg || []).findIndex(
-                (sdg) => sdg.sdgId === sdgId
+            (inputSdgsList || []).findIndex(
+                (sdgId) => sdgId === incomingSdgId
             ) !== -1;
 
         if (isChecked) {
             // Remove SDG from selected list
-            const updatedSdgs = (initData?.Store?.Sdg || []).filter(
-                (sdg) => sdg.sdgId !== sdgId
+            const updatedSdgs = (inputSdgsList || []).filter(
+                (sdgId) => sdgId !== incomingSdgId
             );
-            setInitData(
-                (prevData) =>
-                    prevData && {
-                        ...prevData,
-                        Store: {
-                            ...prevData.Store!,
-                            Sdg: updatedSdgs,
-                        },
-                    }
-            );
+            setInputSdgsList(updatedSdgs);
         } else {
             // Add SDG to selected list
-            const selectedSdg =
-                sdgsList && sdgsList.find((sdg) => sdg.sdgId === sdgId);
-            if (selectedSdg) {
-                setInitData(
-                    (prevData) =>
-                        prevData && {
-                            ...prevData,
-                            Store: {
-                                ...prevData.Store!,
-                                Sdg: [
-                                    ...(prevData.Store?.Sdg || []),
-                                    selectedSdg,
-                                ],
-                            },
-                        }
-                );
+            const selectedSdg = [...(inputSdgsList || []), incomingSdgId];
+            if (selectedSdg && selectedSdg.length > 0) {
+                setInputSdgsList(selectedSdg);
             }
         }
     };
+
+    useEffect(() => {
+        if (initData?.User?.year) {
+            setValue("User.year", initData.User.year, { shouldValidate: true });
+        }
+    }, [initData, setValue]);
 
     const [invitingNisitIdFields, setInvitingNisitIdFields] = useState<
         string[]
@@ -208,12 +207,17 @@ export default function StoreRegister() {
                 <label className="block text-gray-700 text-sm font-bold mb-2">
                     Year
                 </label>
-                <input
+                <select
                     defaultValue={initData?.User.year || ""}
-                    {...register("User.year")}
-                    placeholder="Year"
+                    {...register("User.year", { setValueAs: (v) => Number(v) })}
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white"
-                />
+                >
+                    <option value={1}>1</option>
+                    <option value={2}>2</option>
+                    <option value={3}>3</option>
+                    <option value={4}>4</option>
+                    <option value={5}>5</option>
+                </select>
             </div>
 
             <div className="mb-4">
@@ -256,9 +260,9 @@ export default function StoreRegister() {
                     {...register("Store.mainProductType")}
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white"
                 >
-                    <option value={1}>Product Type 1</option>
-                    <option value={2}>Product Type 2</option>
-                    <option value={3}>Product Type 3</option>
+                    <option value={"Product Type 1"}>Product Type 1</option>
+                    <option value={"Product Type 2"}>Product Type 2</option>
+                    <option value={"Product Type 3"}>Product Type 3</option>
                     {/* Add more options as needed */}
                 </select>
             </div>
@@ -287,12 +291,17 @@ export default function StoreRegister() {
                             <input
                                 type="checkbox"
                                 id={`sdg-${option.sdgId}`}
-                                checked={(initData?.Store?.Sdg || []).some(
-                                    (sdg) => sdg.sdgId === option.sdgId
-                                )}
+                                checked={(
+                                    inputSdgsList ||
+                                    initData?.Store?.Sdg.map(
+                                        ({ sdgId }) => sdgId
+                                    ) ||
+                                    []
+                                ).includes(option.sdgId)}
                                 onChange={() =>
-                                    handleCheckboxChange(option.sdgId)
+                                    handleSdgsCheckboxChange(option.sdgId)
                                 }
+                                value={option.sdgId}
                                 className="form-checkbox h-4 w-4 text-green-600 focus:outline-none focus:shadow-outline"
                             />
                             <label

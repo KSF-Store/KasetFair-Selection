@@ -1,7 +1,7 @@
 type ConnectDisconnectParams = {
     fieldName: string;
-    validItems: number[] | string[];
-    currentItems: number[] | string[];
+    validItems: (number | string)[];
+    currentItems: (number | string)[];
     connectField: string;
     disconnectField: string;
 };
@@ -12,12 +12,16 @@ export function createConnectDisconnectObject({
     currentItems,
     connectField,
     disconnectField,
-}: ConnectDisconnectParams) {
-    const itemsToConnect = validItems.filter(
-        (id) => !currentItems.includes(id)
+}: ConnectDisconnectParams): Object {
+    const itemsToConnect = validItems.filter((id) =>
+        typeof id === "number"
+            ? !currentItems.includes(id)
+            : !currentItems.find((origin) => origin === id)
     );
-    const itemsToDisconnect = currentItems.filter(
-        (id) => !validItems.includes(id)
+    const itemsToDisconnect = currentItems.filter((id) =>
+        typeof id === "number"
+            ? !validItems.includes(id)
+            : !validItems.find((origin) => origin === id)
     );
     return {
         [fieldName]: {
