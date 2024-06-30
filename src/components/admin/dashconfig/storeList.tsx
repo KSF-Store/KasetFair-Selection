@@ -1,7 +1,11 @@
-import { StoreType } from "@/interface/dbType";
-import axios from "axios";
-import Link from "next/link";
+'use client'
 import { useState, useEffect } from "react";
+
+import axios from "axios";
+
+import { StoreType } from "@/interface/dbType";
+
+import Link from "next/link";
 
 type StoresRenderType = {
     stores: StoreType[],

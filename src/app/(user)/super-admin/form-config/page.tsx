@@ -8,7 +8,6 @@ type Props = {};
 export default function page({}: Props) {
     return (
         <section>
-            placeholder
             <AdminDashboardFormConfig/>
         </section>
     );
