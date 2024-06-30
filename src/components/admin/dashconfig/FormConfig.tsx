@@ -50,9 +50,7 @@ export default function AdminDashboardFormConfig() {
           </ul>
         </nav>
       </aside>
-      <main className="w-3/4 p-4">
-        <StoreList/>
-        <div className="mb-4"/>
+      <main className=" flex flex-col gap-y-[5vh] w-full p-4">
         <SdgConfig/>
         <div className="mb-4"/>
         <CategoryConfig/>
