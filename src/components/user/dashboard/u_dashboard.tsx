@@ -38,6 +38,7 @@ const [store, setStore] = useState<StorePayload>({
       const response = await OnGettingStoreOfUser()
       const retriveStore = response.Store
 
+      // console.log("response", response)
       setUser({
         name: response.name ?? "",
         nisitId: response.nisitId ?? "",
