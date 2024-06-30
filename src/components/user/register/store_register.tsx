@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
 
+import { useForm, SubmitHandler } from "react-hook-form";
+
+import { getUserAndStore } from "@/server/connectToDb/GettingStoreOfUser";
+import { createEditStore } from "@/server/connectToDb/CreateAndEditStore";
+import { getAllSdgs } from "@/server/connectToDb/Sdg";
+
 import { Sdg, UserType, StoreType } from "@/interface/dbType";
 import { SdgPayload, StorePayload, UserPayload } from "@/interface/payloadType";
 import { defaultResponse } from "@/interface/responseType";
-import { getUserAndStore } from "@/server/connectToDb/GettingStoreOfUser";
 import {
     GetAllSdgsResponse,
     GetUserWithStoreResponse,
 } from "@/interface/responseType";
-import { createEditStore } from "@/server/connectToDb/CreateAndEditStore";
-import { getAllSdgs } from "@/server/connectToDb/Sdg";
-import { useForm, SubmitHandler } from "react-hook-form";
 
 type Inputs = {
     User: Omit<UserPayload, "Store">;
@@ -151,57 +153,59 @@ export default function StoreRegister() {
     };
 
     return (
-        <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="max-w-md mx-auto bg-green-100 shadow-md rounded px-8 pt-6 pb-8 mb-4"
-        >
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                    Prefix
-                </label>
-                <input
-                    defaultValue={initData?.User.prefix || ""}
-                    {...register("User.prefix")}
-                    placeholder="Prefix"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white"
-                />
-            </div>
+        <div className="flex items-center justify-center min-h-screen  bg-gray-100">
+            <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="w-full max-w-3xl bg-white shadow-lg rounded-lg p-8 space-y-6"
+            >
+                <h1 className="text-2xl font-bold mb-4 text-center">Register Store</h1>
+                <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="prefix">
+                        Prefix
+                    </label>
+                    <input
+                        defaultValue={initData?.User.prefix || ""}
+                        {...register("User.prefix")}
+                        placeholder="Prefix"
+                        className="block w-full border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50"
+                    />
+                </div>
 
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                    Name
-                </label>
-                <input
-                    defaultValue={initData?.User.name || ""}
-                    {...register("User.name")}
-                    placeholder="Name"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white"
-                />
-            </div>
+                <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+                        Name
+                    </label>
+                    <input
+                        defaultValue={initData?.User.name || ""}
+                        {...register("User.name")}
+                        placeholder="Name"
+                        className="block w-full border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50"
+                    />
+                </div>
 
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                    NisitId
-                </label>
-                <input
-                    defaultValue={initData?.User.nisitId || ""}
-                    {...register("User.nisitId")}
-                    placeholder="NisitId"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white"
-                />
-            </div>
+                <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="nisitId">
+                        Nisit ID
+                    </label>
+                    <input
+                        defaultValue={initData?.User.nisitId || ""}
+                        {...register("User.nisitId")}
+                        placeholder="Nisit ID"
+                        className="block w-full border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50"
+                    />
+                </div>
 
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                    Faculty
-                </label>
-                <input
-                    defaultValue={initData?.User.faculty || ""}
-                    {...register("User.faculty")}
-                    placeholder="Faculty"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white"
-                />
-            </div>
+                <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="faculty">
+                        Faculty
+                    </label>
+                    <input
+                        defaultValue={initData?.User.faculty || ""}
+                        {...register("User.faculty")}
+                        placeholder="Faculty"
+                        className="block w-full border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50"
+                    />
+                </div>
 
             <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -220,33 +224,29 @@ export default function StoreRegister() {
                 </select>
             </div>
 
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                    Store name
-                </label>
-                <input
-                    defaultValue={
-                        (initData?.Store && initData?.Store.name) || ""
-                    }
-                    {...register("Store.name")}
-                    placeholder="Store name"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white"
-                />
-            </div>
+                <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="storeName">
+                        Store Name
+                    </label>
+                    <input
+                        defaultValue={initData?.Store?.name || ""}
+                        {...register("Store.name")}
+                        placeholder="Store Name"
+                        className="block w-full border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50"
+                    />
+                </div>
 
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                    Description
-                </label>
-                <input
-                    defaultValue={
-                        (initData?.Store && initData?.Store.description) || ""
-                    }
-                    {...register("Store.description")}
-                    placeholder="Description"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white"
-                />
-            </div>
+                <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
+                        Description
+                    </label>
+                    <input
+                        defaultValue={initData?.Store?.description || ""}
+                        {...register("Store.description")}
+                        placeholder="Description"
+                        className="block w-full border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50"
+                    />
+                </div>
 
             <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -314,57 +314,56 @@ export default function StoreRegister() {
                     ))}
             </div>
 
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                    Inviting NisitId
-                </label>
-                {invitingNisitIdFields.map((nisitId, index) => (
-                    <div key={index} className="flex items-center mb-2">
-                        <input
-                            type="text"
-                            value={nisitId}
-                            onChange={(e) => {
-                                const updatedFields = [
-                                    ...invitingNisitIdFields,
-                                ];
-                                updatedFields[index] = e.target.value;
-                                setInvitingNisitIdFields(updatedFields);
-                            }}
-                            className="form-input w-full"
-                        />
-                        {index === 0 && (
-                            <button
-                                type="button"
-                                onClick={addInvitingField}
-                                className="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                            >
-                                Add
-                            </button>
-                        )}
-                        {index > 0 && (
-                            <button
-                                type="button"
-                                onClick={() => removeInvitingField(index)}
-                                className="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                            >
-                                Remove
-                            </button>
-                        )}
-                    </div>
-                ))}
-            </div>
+                <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                        Inviting Nisit ID
+                    </label>
+                    {invitingNisitIdFields.map((nisitId, index) => (
+                        <div key={index} className="flex items-center mb-2">
+                            <input
+                                type="text"
+                                value={nisitId}
+                                onChange={(e) => {
+                                    const updatedFields = [...invitingNisitIdFields];
+                                    updatedFields[index] = e.target.value;
+                                    setInvitingNisitIdFields(updatedFields);
+                                }}
+                                className="form-input block w-full border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50"
+                            />
+                            {index === 0 ? (
+                                <button
+                                    type="button"
+                                    onClick={addInvitingField}
+                                    className="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                >
+                                    Add
+                                </button>
+                            ) : (
+                                <button
+                                    type="button"
+                                    onClick={() => removeInvitingField(index)}
+                                    className="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                >
+                                    Remove
+                                </button>
+                            )}
+                        </div>
+                    ))}
+                </div>
 
-            <div className="flex items-center justify-between">
-                <button
-                    type="submit"
-                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                    Create/Edit
-                </button>
-            </div>
-        </form>
+                <div className="flex items-center justify-between">
+                    <button
+                        type="submit"
+                        className="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    >
+                        Create/Edit
+                    </button>
+                </div>
+            </form>
+        </div>
     );
 }
+
 //     const [user, setUser] = useState<UserType>({
 //         name: "",
 //         faculty: "",
