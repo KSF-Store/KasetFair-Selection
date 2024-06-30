@@ -39,6 +39,11 @@ export interface Sdg {
     name: string;
 }
 
+export interface Category {
+    categoryId: number;
+    name: string;
+}
+
 export interface Booth {
     id: number;
     name: string;

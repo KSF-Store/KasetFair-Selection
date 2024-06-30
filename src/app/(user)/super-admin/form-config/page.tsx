@@ -1,13 +1,14 @@
 import React from "react";
 
-import AdminDashboard from "@/components/admin/dashboard/aDashboard";
+import AdminDashboardFormConfig from "@/components/admin/dashconfig/FormConfig";
+
 
 type Props = {};
 
 export default function page({}: Props) {
     return (
         <section>
-            <AdminDashboard />
+            <AdminDashboardFormConfig/>
         </section>
     );
 }
