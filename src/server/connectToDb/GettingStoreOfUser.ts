@@ -11,8 +11,10 @@ export const OnGettingStoreOfUser = async () => {
 
         const existingUser = await prismaDb.user.findUnique({
             where: { email: session.user.email?.toString() },
+
             include: { Store: true, invited: true },
         });
+
 
         if (!existingUser) {
             throw new Error("User not found");
@@ -56,3 +58,4 @@ export async function getUserAndStore(): Promise<GetUserWithStoreResponse> {
         throw new Error("Get store failed (Unknown error)", error.message);
     }
 }
+
