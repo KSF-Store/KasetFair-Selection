@@ -5,15 +5,15 @@ export interface defaultResponse {
 }
 
 export interface GetAllSdgsResponse extends defaultResponse {
-    data: Sdg[];
+    data: Sdg[] | null;
 }
 
 export interface GetUserResponse extends defaultResponse {
-    data: UserType;
+    data: UserType | null;
 }
 
 export interface CreateEditStoreResponse extends defaultResponse {
-    data: StoreType;
+    data: StoreType | null;
 }
 
 // export interface GetStoreResponse extends defaultResponse {
@@ -35,4 +35,7 @@ export interface GetUserWithStoreResponse extends defaultResponse {
               })
             | null;
     };
+}
+export interface UpdateUserResponse extends defaultResponse {
+    data: UserType;
 }

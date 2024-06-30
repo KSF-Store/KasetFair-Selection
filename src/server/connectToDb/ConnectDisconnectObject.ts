@@ -1,7 +1,7 @@
 type ConnectDisconnectParams = {
     fieldName: string;
-    validItems: number[];
-    currentItems: number[];
+    validItems: number[] | string[];
+    currentItems: number[] | string[];
     connectField: string;
     disconnectField: string;
 };

@@ -18,6 +18,7 @@ model User {
   nisitId        String?      @unique
   email          String?      @unique
   role           String?
+  prefix         String?
   name           String?
   faculty        String?
   year           Int?
@@ -32,7 +33,6 @@ model Store {
   storeId         Int         @id @unique @default(autoincrement())       
   storeRole       String?
   name            String?     @unique
-  faculty         String?
   description     String?
   slogan          String?
   mainProductType String?

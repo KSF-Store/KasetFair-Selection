@@ -4,9 +4,8 @@ export type StorePayload = Omit<
     StoreType,
     "Sdg" | "Booth" | "boothId" | "isAssigned" | "Member"
 > & {
-    memberUserId?: number[] | null;
     invitingNisitId?: string[] | null;
-    sdgId: number[];
+    sdgId?: number[];
 };
 
 export type UserPayload = UserType;

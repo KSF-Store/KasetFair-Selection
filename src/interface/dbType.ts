@@ -2,6 +2,7 @@ export interface UserType {
     userId?: number;
     nisitId?: string | null;
     role?: string | null;
+    prefix?: string | null;
     name?: string | null;
     faculty?: string | null;
     year?: number | null;

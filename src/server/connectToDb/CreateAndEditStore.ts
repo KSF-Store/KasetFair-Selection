@@ -90,14 +90,14 @@ async function updateStore(
     const currentInviting = existdStore.inviting;
     const validInvitingUsers = await prismaDb.user.findMany({
         where: { nisitId: { in: newStoreProps.invitingNisitId } },
-        select: { userId: true },
+        select: { nisitId: true },
     });
     const invitingUpdate = createConnectDisconnectObject({
         fieldName: "inviting",
-        validItems: validInvitingUsers.map((user) => user.userId),
-        currentItems: currentInviting.map((user) => user.userId),
-        connectField: "userId",
-        disconnectField: "userId",
+        validItems: validInvitingUsers.map((user) => user.nisitId || ""),
+        currentItems: currentInviting.map((user) => user.nisitId || ""),
+        connectField: "nisitId",
+        disconnectField: "nisitId",
     });
 
     const currentSdg = existdStore.Sdg;
@@ -158,19 +158,19 @@ export async function createEditStore(
         const session = await OnGetCurrentSession();
         const Store = payload.Store;
         const User = payload.User;
+        console.log(payload);
         // console.log("In API", payload);
 
         if (!session || !session.user || !session.user.email) {
             throw new Error("Unauthorize");
         }
-
         const email = session.user.email;
         const existdUser = await prismaDb.user.findUnique({
             where: { email },
             include: { Store: true },
         });
 
-        console.log(existdUser);
+        // console.log(existdUser);
         // const existdUser = await prismaDb.user.findUnique({
         //     where: { userId: User.userId },
         //     select: { storeId: true },
