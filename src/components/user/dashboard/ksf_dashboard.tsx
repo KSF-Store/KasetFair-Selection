@@ -1,5 +1,7 @@
 import React from 'react'
 
+import StoreList from '@/components/admin/dashconfig/storeList'
+
 type Props = {}
 
 export default function AllStoreDashboard({}: Props) {
@@ -9,6 +11,7 @@ export default function AllStoreDashboard({}: Props) {
         <input 
             placeholder="Search all store comppettion or store details here"
         />
+        <StoreList/>
     </section>
   )
 }
