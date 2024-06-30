@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 
-import { UserType } from "@/interface/dbType";
-import { SdgPayload, StorePayload } from "@/interface/payloadType";
+import axios, { AxiosResponse } from "axios";
 
 import EditUserAndStore from "@/utils/api/stores/EditUserAndStore";
+import OnGetCurrentSession from "@/utils/getSession/getCurrentSession";
 
-import axios, { AxiosResponse } from "axios";
 import {
     GetAllSdgsResponse,
     GetUserWithStoreResponse,
 } from "@/interface/responseType";
+import { UserType } from "@/interface/dbType";
+import { SdgPayload, StorePayload } from "@/interface/payloadType";
 
-import OnGetCurrentSession from "@/utils/getSession/getCurrentSession";
 
 export default function StoreRegister() {
     const [user, setUser] = useState<UserType>({
