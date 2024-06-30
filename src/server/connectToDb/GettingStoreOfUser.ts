@@ -64,6 +64,6 @@ export async function getUserAndStore(): Promise<GetUserWithStoreResponse> {
         return { data : responseData, message: "Store retrived succesful" };
     } catch (error: any) {
         console.log(error);
-        throw new Error("Get store failed (Unknown error)", error.message);
+        throw new Error("Get store failed (Unknown error");
     }
 }

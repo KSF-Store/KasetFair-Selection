@@ -10,37 +10,43 @@ import { prismaDb } from "@/lib/prismaDb";
 import { createConnectDisconnectObject } from "@/server/connectToDb/ConnectDisconnectObject";
 import { connectUserToStore } from "@/server/connectToDb/ConnectUserToStore";
 import OnGetCurrentSession from "@/utils/getSession/getCurrentSession";
+import { updateUser } from "./UpdateUser";
 
 async function createStore(
     User: UserPayload,
     Store: StorePayload
 ): Promise<CreateEditStoreResponse> {
-    // console.log("In API user  creating : ", User);
+    console.log("wtf1", Store.invitingNisitId);
+    let invitingUpdate: object | undefined;
+    if (Store.invitingNisitId) {
+        const validInvitingUsers = await prismaDb.user.findMany({
+            where: { nisitId: { in: Store.invitingNisitId } },
+            select: { nisitId: true },
+        });
+        invitingUpdate = createConnectDisconnectObject({
+            fieldName: "inviting",
+            validItems: validInvitingUsers.map((user) => user.nisitId || ""),
+            currentItems: [],
+            connectField: "nisitId",
+            disconnectField: "nisitId",
+        });
+        console.log("wtf2", invitingUpdate);
+    }
 
-    const validInvitingUsers = await prismaDb.user.findMany({
-        where: { nisitId: { in: Store.invitingNisitId } },
-        select: { userId: true },
-    });
-    const validSdg = await prismaDb.sdg.findMany({
-        where: { sdgId: { in: Store.sdgId } },
-        select: { sdgId: true },
-    });
-
-    const invitingUpdate = createConnectDisconnectObject({
-        fieldName: "inviting",
-        validItems: validInvitingUsers.map((user) => user.userId),
-        currentItems: [],
-        connectField: "userId",
-        disconnectField: "userId",
-    });
-
-    const sdgUpdate = createConnectDisconnectObject({
-        fieldName: "Sdg",
-        validItems: validSdg.map((sdg) => sdg.sdgId),
-        currentItems: [],
-        connectField: "sdgId",
-        disconnectField: "sdgId",
-    });
+    let sdgUpdate: object | undefined;
+    if (Store.sdgId) {
+        const validSdg = await prismaDb.sdg.findMany({
+            where: { sdgId: { in: Store.sdgId } },
+            select: { sdgId: true },
+        });
+        sdgUpdate = createConnectDisconnectObject({
+            fieldName: "Sdg",
+            validItems: validSdg.map((sdg) => sdg.sdgId),
+            currentItems: [],
+            connectField: "sdgId",
+            disconnectField: "sdgId",
+        });
+    }
 
     const newStore = await prismaDb.store.create({
         data: {
@@ -88,41 +94,47 @@ async function updateStore(
     }
 
     const currentInviting = existdStore.inviting;
-    const validInvitingUsers = await prismaDb.user.findMany({
-        where: { nisitId: { in: newStoreProps.invitingNisitId } },
-        select: { nisitId: true },
-    });
-    const invitingUpdate = createConnectDisconnectObject({
-        fieldName: "inviting",
-        validItems: validInvitingUsers.map((user) => user.nisitId || ""),
-        currentItems: currentInviting.map((user) => user.nisitId || ""),
-        connectField: "nisitId",
-        disconnectField: "nisitId",
-    });
+    let invitingUpdate: object | undefined;
+    if (newStoreProps.invitingNisitId) {
+        const validInvitingUsers = await prismaDb.user.findMany({
+            where: { nisitId: { in: newStoreProps.invitingNisitId } },
+            select: { nisitId: true },
+        });
+        invitingUpdate = createConnectDisconnectObject({
+            fieldName: "inviting",
+            validItems: validInvitingUsers.map((user) => user.nisitId || ""),
+            currentItems: currentInviting.map((user) => user.nisitId || ""),
+            connectField: "nisitId",
+            disconnectField: "nisitId",
+        });
+    }
 
     const currentSdg = existdStore.Sdg;
-    const validSdg = await prismaDb.sdg.findMany({
-        where: { sdgId: { in: newStoreProps.sdgId } },
-        select: { sdgId: true },
-    });
-    const sdgUpdate = createConnectDisconnectObject({
-        fieldName: "Sdg",
-        validItems: validSdg.map((sdg) => sdg.sdgId),
-        currentItems: currentSdg.map((sdg) => sdg.sdgId),
-        connectField: "sdgId",
-        disconnectField: "sdgId",
-    });
+    let sdgUpdate: object | undefined;
+    if (newStoreProps.sdgId) {
+        const validSdg = await prismaDb.sdg.findMany({
+            where: { sdgId: { in: newStoreProps.sdgId } },
+            select: { sdgId: true },
+        });
+        sdgUpdate = createConnectDisconnectObject({
+            fieldName: "Sdg",
+            validItems: validSdg.map((sdg) => sdg.sdgId),
+            currentItems: currentSdg.map((sdg) => sdg.sdgId),
+            connectField: "sdgId",
+            disconnectField: "sdgId",
+        });
+    }
 
-    const currentMember = existdStore.Member;
-    const memberUpdate = createConnectDisconnectObject({
-        fieldName: "Member",
-        validItems: [],
-        currentItems: currentMember
-            .map((member) => member.userId)
-            .filter((userId) => userId !== User.userId),
-        connectField: "userId",
-        disconnectField: "userId",
-    });
+    // const currentMember = existdStore.Member;
+    // const memberUpdate = createConnectDisconnectObject({
+    //     fieldName: "Member",
+    //     validItems: [],
+    //     currentItems: currentMember
+    //         .map((member) => member.userId)
+    //         .filter((userId) => userId !== User.userId),
+    //     connectField: "userId",
+    //     disconnectField: "userId",
+    // });
 
     const updatedStore = await prismaDb.store.update({
         where: { storeId },
@@ -140,7 +152,7 @@ async function updateStore(
             thirdPhone: newStoreProps.thirdPhone,
             ...invitingUpdate,
             ...sdgUpdate,
-            ...memberUpdate,
+            // ...memberUpdate,
         },
     });
 
@@ -191,6 +203,7 @@ export async function createEditStore(
         }
         User.userId = existdUser.userId;
 
+        await updateUser(User);
         let response;
         if (!existdUser.storeId) {
             console.log("Do Create");
