@@ -4,14 +4,14 @@ export type StorePayload = Omit<
     StoreType,
     "Sdg" | "Booth" | "boothId" | "isAssigned" | "Member"
 > & {
-    memberUserId?: number[];
-    invitingNisitId?: string[];
+    memberUserId?: number[] | null;
+    invitingNisitId?: string[] | null;
     sdgId: number[];
 };
 
 export type UserPayload = UserType;
 
-export interface StoreEditPayload {
+export interface StoreCreateEditPayload {
     User: UserPayload;
     Store: StorePayload;
 }

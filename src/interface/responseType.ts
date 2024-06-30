@@ -2,7 +2,6 @@ import { Sdg, StoreType, UserType } from "./dbType";
 
 export interface defaultResponse {
     message: string;
-    status: number;
 }
 
 export interface GetAllSdgsResponse extends defaultResponse {
@@ -11,6 +10,10 @@ export interface GetAllSdgsResponse extends defaultResponse {
 
 export interface GetUserResponse extends defaultResponse {
     data: UserType;
+}
+
+export interface CreateEditStoreResponse extends defaultResponse {
+    data: StoreType;
 }
 
 // export interface GetStoreResponse extends defaultResponse {
@@ -24,10 +27,12 @@ export interface GetUserResponse extends defaultResponse {
 export interface GetUserWithStoreResponse extends defaultResponse {
     data: {
         User: UserType;
-        Store?: StoreType & {
-            Sdg: Sdg[];
-            Member: UserType[];
-            inviting: UserType[];
-        };
+        Store?:
+            | (StoreType & {
+                  Sdg: Sdg[];
+                  Member: UserType[];
+                  inviting: UserType[];
+              })
+            | null;
     };
 }

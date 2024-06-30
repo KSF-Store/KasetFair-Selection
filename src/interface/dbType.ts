@@ -1,37 +1,37 @@
 export interface UserType {
     userId?: number;
-    nisitId: string;
-    role?: string;
-    name: string;
-    faculty?: string;
-    year?: number;
-    address?: string;
-    phone?: string;
-    storeId?: number;
-    Store?: StoreType;
-    invited?: StoreType[];
+    nisitId?: string | null;
+    role?: string | null;
+    name?: string | null;
+    faculty?: string | null;
+    year?: number | null;
+    address?: string | null;
+    phone?: string | null;
+    storeId?: number | null;
+    Store?: StoreType | null;
+    invited?: StoreType[] | null;
 }
 
 export interface StoreType {
-    storeId?: number;
-    storeRole?: string;
-    name?: string;
-    description?: string;
-    slogan?: string;
-    mainProductType: string;
-    subProductType?: string;
-    innovation?: string;
-    firstPhone?: string;
-    secondPhone?: string;
-    thirdPhone?: string;
-    status?: StoreStatus; // 0 for draft, 1 for pending ...
-    ownerId?: number;
-    Member?: UserType[];
-    isAssigned?: boolean;
-    boothId?: number;
-    Booth?: Booth;
-    Sdg?: Sdg[];
-    inviting?: UserType[];
+    storeId?: number | null;
+    storeRole?: string | null;
+    name?: string | null;
+    description?: string | null;
+    slogan?: string | null;
+    mainProductType?: string | null; // Assuming this cannot be null based on your existing definition
+    subProductType?: string | null;
+    innovation?: string | null;
+    firstPhone?: string | null;
+    secondPhone?: string | null;
+    thirdPhone?: string | null;
+    status?: StoreStatus | null; // Assuming this can be null
+    ownerId?: number | null;
+    Member?: UserType[] | null;
+    isAssigned?: boolean | null;
+    boothId?: number | null;
+    Booth?: Booth | null;
+    Sdg?: Sdg[] | null;
+    inviting?: UserType[] | null;
 }
 
 export interface Sdg {
